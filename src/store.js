@@ -5,10 +5,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userInfo: null
+    userInfo: 1,
+    footerTabbarIndex: 0
   },
   mutations: {
-
+    footerTabbar(state, data) {
+      state.footerTabbarIndex = data
+    }
   },
   actions: {
 
