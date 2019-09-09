@@ -1,0 +1,44 @@
+
+@import './variable.scss';
+@import './mixin.scss';
+
+@import './reset.scss';
+
+.prevent {
+	pointer-events: none;
+}
+.clearfix {
+	@include clearfix;
+}
+.flex, .flex-c, .flex-v-c, .flex-h-c, .flex-h-b, .flex-v-b {
+  display: flex;
+}
+.flex-c, .flex-v-c, .flex-h-b {
+  align-items: center;
+}
+.flex-c, .flex-h-c {
+  justify-content: center;
+}
+.flex-b, .flex-h-b, .flex-v-b {
+  justify-content: space-between;
+}
+.flex-v-b {
+  flex-direction: column;
+}
+.flex-fill {
+  flex: 1;
+  overflow: hidden;
+}
+.tab-center {
+  display: table;
+  & > * {
+    display: table-cell; 
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
