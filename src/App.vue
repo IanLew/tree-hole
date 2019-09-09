@@ -23,9 +23,9 @@ export default {
     onCreate(active) {
       if(active == 2) {
         if(this.$store.state.userInfo) {
-          this.$router.replace('/create')
+          this.$router.replace('create')
         } else {
-          this.$router.replace('/login')
+          this.$router.replace('login')
         }
       }
     }
