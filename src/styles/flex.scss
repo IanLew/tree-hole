@@ -1,0 +1,27 @@
+[class*="flex"]{
+    display: flex;
+	display: -webkit-flex;
+}
+.flex-between {
+	justify-content: space-between;
+	-webkit-justify-content: space-between;
+	align-items: center;
+	-webkit-align-items: center;
+}
+
+.flex-center {
+	justify-content: center;
+	-webkit-justify-content: center;
+	align-items: center;
+	-webkit-align-items: center;
+}
+
+.flex-y {
+	justify-content: center;
+	-webkit-justify-content: center;
+}
+
+.flex-x {
+	align-items: center;
+	-webkit-align-items: center;
+}
