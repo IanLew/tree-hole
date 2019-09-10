@@ -1,6 +1,6 @@
 <template>
   <div class="create">
-    <van-popup v-model="showPop" closeable close-icon="close" position="bottom" :style="{ height: '20%' }"></van-popup>
+    <van-popup v-model="show" position="bottom" :overlay="true" :overlay-style="{backgroundColor:'rgba(0,0,0,.3)'}" :style="{height:'40%'}"/>
   </div>
 </template>
 
@@ -9,7 +9,7 @@ export default {
   name: 'create',
   data() {
     return {
-      showPop: true
+      show: true
     }
   }
 }

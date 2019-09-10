@@ -6,6 +6,7 @@ Vue.use(Router)
 Vue.use(Title)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -32,14 +33,6 @@ export default new Router({
       component: () => import(/* webpackChunkName: "mail" */ './views/Mail.vue')
     },
     {
-      path: '/create',
-      name: 'create',
-      meta: {
-        title: '创建'
-      },
-      component: () => import(/* webpackChunkName: "create" */ './views/Create.vue')
-    },
-    {
       path: '/centre',
       name: 'centre',
       meta: {
@@ -47,13 +40,21 @@ export default new Router({
       },
       component: () => import(/* webpackChunkName: "centre" */ './views/Centre.vue')
     },
-    {
-      path: '/login',
-      name: 'login',
-      meta: {
-        title: '我的'
-      },
-      component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
-    }
+    // {
+    //   path: '/create',
+    //   name: 'create',
+    //   meta: {
+    //     title: '创建'
+    //   },
+    //   component: () => import(/* webpackChunkName: "create" */ './views/Create.vue')
+    // },
+    // {
+    //   path: '/login',
+    //   name: 'login',
+    //   meta: {
+    //     title: '我的'
+    //   },
+    //   component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
+    // }
   ]
 })
