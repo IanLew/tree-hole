@@ -21,20 +21,20 @@ module.exports = {
     extract: true
   },
   chainWebpack: config => {
+    // svg
+    const svgRule = config.module.rule('svg')
+    svgRule.uses.clear()
+    svgRule.exclude.add(/node_modules/)
+    svgRule.test(/\.svg$/).use('svg-sprite-loader').loader('svg-sprite-loader').options({
+      symbolId: 'icon-[name]'
+    }).end()
+
+    // images添加svg
+    const imagesRule = config.module.rule('images')
+    imagesRule.exclude.add(path.join(__dirname, 'src/icons'))
+    config.module.rule('images').test(/\.(png|jpe?g|gif|svg)(\?.*)?$/).end()
+
     if(process.env.NODE_ENV === 'production') {
-      // svg
-      const svg = config.module.rule('svg')
-      svg.uses.clear()
-      svg.exclude.add(/node_modules/)
-      svg.test(/\.svg$/).use('svg-sprite-loader').loader('svg-sprite-loader').options({
-        symbolId: 'ico-[name]'
-      })
-
-      // images添加svg
-      const image = config.module.rule('images')
-      image.exclude.add(path.join(__dirname, './', 'src/assets/svg'))
-      image.test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
-
       // 压缩图片
       config.module.rule('images').use('image-webpack-loader').loader('image-webpack-loader').options({
         bypassOnDebug: true
