@@ -1,7 +1,7 @@
 <template>
   <van-tabbar v-model="$store.state.footerMenuIndex" @change="onCreate">
     <van-tabbar-item icon="home-o" to="/" replace>森林</van-tabbar-item>
-    <van-tabbar-item icon="circle" to="/chat" replace>树洞</van-tabbar-item>
+    <van-tabbar-item icon="circle" to="/chat" replace>回声</van-tabbar-item>
     <van-tabbar-item icon="add-o"></van-tabbar-item>
     <van-tabbar-item icon="newspaper-o" info="" to="/mail" replace>信箱</van-tabbar-item>
     <van-tabbar-item icon="hotel-o" to="/centre" replace>小屋</van-tabbar-item>

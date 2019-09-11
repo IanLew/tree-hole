@@ -20,7 +20,7 @@ export default new Router({
       path: '/chat',
       name: 'chat',
       meta: {
-        title: '树洞'
+        title: '回声'
       },
       component: () => import(/* webpackChunkName: "chat" */ './views/Chat.vue')
     },

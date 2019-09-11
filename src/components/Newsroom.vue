@@ -51,6 +51,7 @@ export default {
   }
   .text {
     font-size: 14px;
+    color: #7d7e80;
   }
 }
 </style>
