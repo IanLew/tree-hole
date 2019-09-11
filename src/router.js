@@ -55,6 +55,30 @@ export default new Router({
     //     title: '我的'
     //   },
     //   component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
-    // }
+    // },
+    {
+      path: '/mood',
+      name: 'mood',
+      meta: {
+        title: '种树苗'
+      },
+      component: () => import(/* webpackChunkName: "mood" */ './views/Mood.vue')
+    },
+    {
+      path: '/letter',
+      name: 'letter',
+      meta: {
+        title: '纸飞机'
+      },
+      component: () => import(/* webpackChunkName: "letter" */ './views/Letter.vue')
+    },
+    {
+      path: '/glass',
+      name: 'glass',
+      meta: {
+        title: '时间囊'
+      },
+      component: () => import(/* webpackChunkName: "glass" */ './views/Glass.vue')
+    },
   ]
 })

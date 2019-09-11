@@ -1,15 +1,15 @@
 <template>
   <van-popup v-model="$store.state.newroomSwitch" position="bottom" @close="onRoomClose" :overlay="true" :overlay-style="{backgroundColor:'rgba(0,0,0,.3)'}" :style="{height:'20%'}">
     <div class="create flex-c">
-      <router-link class="flex-fill flex-c" to="/">
-        <svg-icon iconClass="write_letter" className="icon"></svg-icon>
+      <router-link class="flex-fill flex-c" to="/mood">
+        <svg-icon iconClass="write_mood" className="icon"></svg-icon>
         <div class="text">种树苗</div>
       </router-link>
-      <router-link class="flex-fill flex-c" to="/">
+      <router-link class="flex-fill flex-c" to="/letter">
         <svg-icon iconClass="paper_plane" className="icon"></svg-icon>
         <div class="text">纸飞机</div>
       </router-link>
-      <router-link class="flex-fill flex-c" to="/">
+      <router-link class="flex-fill flex-c" to="/glass">
         <svg-icon iconClass="time_capsule" className="icon"></svg-icon>
         <div class="text">时间囊</div>
       </router-link>
