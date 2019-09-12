@@ -157,8 +157,11 @@ export default {
 }
 .items {
   .item {
-    border-bottom: 5px solid #ebedf0;
-    padding: 15px 10px;
+    border-bottom: 10px solid #ebedf0;
+    padding: 0 10px;
+    .item-top {
+      padding: 10px 0;
+    }
     .item-link {
       display: block;
     }
@@ -181,7 +184,6 @@ export default {
       color: #222;
       font-size: 15px;
       line-height: 22px;
-      margin-top: 10px;
     }
     .images {
       margin-top: 10px;
@@ -207,8 +209,7 @@ export default {
       }
     }
     .tools {
-      margin-top: 10px;
-      padding: 0 5px;
+      padding: 10px 5px;
       .tool-icon {
         width: 22px;
         height: 22px;
