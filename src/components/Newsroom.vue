@@ -50,7 +50,7 @@ export default {
     margin-bottom: 10px;
   }
   .text {
-    font-size: 14px;
+    font-size: 12px;
     color: #7d7e80;
   }
 }

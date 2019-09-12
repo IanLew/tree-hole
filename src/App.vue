@@ -22,7 +22,7 @@ export default {
 <style lang="scss">
 @import '@/styles/common.scss';
 #app {
-  height: 100%;
+  min-height: 100%;
 }
 .footer-menu-spacing {
   padding-bottom: 50px;

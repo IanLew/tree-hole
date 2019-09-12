@@ -15,6 +15,7 @@ ul, ol, li {
 a {
   cursor: pointer;
   text-decoration: none;
+  color: $baseFontColor;
 }
 fieldset, img, button {
 	border: none 0;
@@ -48,4 +49,6 @@ body {
   user-select: none;
   text-size-adjust: none;
   background-color: #fff;
+  font-size: $baseFontSize;
+  color: $baseFontColor;
 }

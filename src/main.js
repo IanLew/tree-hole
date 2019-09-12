@@ -5,9 +5,11 @@ import store from './store'
 
 import '@/icons'
 
+import Lazyload from 'vue-lazyload'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 
+Vue.use(Lazyload)
 Vue.use(Vant)
 
 Vue.config.productionTip = false

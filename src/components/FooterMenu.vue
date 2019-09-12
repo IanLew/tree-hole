@@ -1,10 +1,24 @@
 <template>
-  <van-tabbar v-model="$store.state.footerMenuIndex" @change="onCreate">
-    <van-tabbar-item icon="home-o" to="/" replace>森林</van-tabbar-item>
-    <van-tabbar-item icon="circle" to="/chat" replace>回声</van-tabbar-item>
-    <van-tabbar-item icon="add-o"></van-tabbar-item>
-    <van-tabbar-item icon="newspaper-o" info="" to="/mail" replace>信箱</van-tabbar-item>
-    <van-tabbar-item icon="hotel-o" to="/centre" replace>小屋</van-tabbar-item>
+  <van-tabbar v-model="$store.state.footerMenuIndex" :border="false" @change="onCreate">
+    <van-tabbar-item to="/" replace>
+      <span>森林</span>
+      <svg-icon slot="icon" iconClass="forest_info" className="icon"></svg-icon>
+    </van-tabbar-item>
+    <van-tabbar-item to="/chat" replace>
+      <span>回声</span>
+      <svg-icon slot="icon" iconClass="tree_hole" className="icon"></svg-icon>
+    </van-tabbar-item>
+    <van-tabbar-item>
+      <svg-icon slot="icon" slot-scope="props" :iconClass="props.active ? 'send_letter' : 'send_letter'" className="icon2"></svg-icon>
+    </van-tabbar-item>
+    <van-tabbar-item info="" to="/mail" replace>
+      <span>信箱</span>
+      <svg-icon slot="icon" iconClass="message_box" className="icon"></svg-icon>
+    </van-tabbar-item>
+    <van-tabbar-item to="/centre" replace>
+      <span>小屋</span>
+      <svg-icon slot="icon" iconClass="mine_setting" className="icon"></svg-icon>
+    </van-tabbar-item>
   </van-tabbar>
 </template>
 
@@ -14,6 +28,10 @@ export default {
   name: 'FooterMenu',
   data() {
     return {
+      icon: {
+        normal: 'forest_message',
+        active: 'forest_message'
+      }
     }
   },
   mounted() {
@@ -39,18 +57,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.create {
-  height: 100%;
-  .flex-c {
-    flex-direction: column;
-  }
-  .icon {
-    width: 25px;
-    height: 25px;
-    margin-bottom: 10px;
-  }
-  .text {
-    font-size: 14px;
-  }
+.icon {
+  width: 18px;
+  height: 18px;
+}
+.icon2 {
+  width: 26px;
+  height: 26px;
 }
 </style>
