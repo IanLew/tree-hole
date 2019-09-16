@@ -84,9 +84,9 @@ export default {
 <style lang="scss" scoped>
 .header {
   background-color: #174a7d;
-  height: 250px;
+  height: 200px;
   position: relative;
-  padding: 100px 10px 0;
+  padding: 40px 10px 0;
   .bg {
     width: 100%;
     height: 100%;
@@ -96,6 +96,7 @@ export default {
     z-index: 1;
   }
   .infos {
+    text-align: center;
     position: relative;
     z-index: 2;
   }
