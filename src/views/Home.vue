@@ -3,7 +3,7 @@
     <van-search placeholder="请输入搜索关键词" v-model="keyword" />
     <van-tabs v-model="active" color="#1989fa" title-active-color="#1989fa">
       <van-tab title="关注">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad(0)" class="items">
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" class="items">
           <div v-for="item in list" :key="item">
             <div class="item">
               <router-link class="item-link" to="/">
@@ -49,7 +49,7 @@
         </van-list>
       </van-tab>
       <van-tab title="发现">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad(0)" class="items">
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" class="items">
           <div v-for="item in list" :key="item">
             <div class="item">
               <router-link class="item-link" to="/">
@@ -150,10 +150,13 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .search {
   width: 25px;
   height: 25px;
+}
+.van-tab {
+  font-size: 15px;
 }
 .items {
   .item {
