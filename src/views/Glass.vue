@@ -93,8 +93,8 @@ export default {
   padding: 10px 15px;
   color: #949494;
   .icon {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     margin-right: 10px;
   }
 }
