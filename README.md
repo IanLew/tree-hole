@@ -1,29 +1,21 @@
-# tree-hole
+# Tree-hole
+This is a vue project of front-end. The project creates a community of voices, please expect it to become a mature product.
 
-## Project setup
-```
-npm install
+## Install dependency
+```bash
+npm i
 ```
 
-### Compiles and hot-reloads for development
-```
+## Build & Run
+```bash
+# development
 npm run serve
 ```
+Run: http://localhost:8080
 
-### Compiles and minifies for production
-```
+```bash
+# test server
+npm run debug
+# production server
 npm run build
 ```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
