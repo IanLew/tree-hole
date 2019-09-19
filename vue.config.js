@@ -39,6 +39,12 @@ module.exports = {
       config.module.rule('images').use('image-webpack-loader').loader('image-webpack-loader').options({
         bypassOnDebug: true
       }).end()
+
+      // 打包分析
+      if(process.env.NPM_CONFIG_REPORT) {
+        config.plugin('webpack-bundle-analyzer').use(BundleAnalyzerPlugin).end()
+        config.plugins.delete('prefetch')
+      }
     }
   },
   configureWebpack: config => {
@@ -55,12 +61,6 @@ module.exports = {
         sourceMap: false,
         parallel: true
       }))
-
-      // 打包分析
-      if(process.env.NPM_CONFIG_REPORT) {
-        config.plugin('webpack-bundle-analyzer').use(BundleAnalyzerPlugin).end()
-        config.plugins.delete('prefetch')
-      }
     }
   }
 }
