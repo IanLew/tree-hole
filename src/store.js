@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userInfo: 1,
+    userInfo: null,
     footerMenuIndex: 0,
     footerMenuSpacing: false,
     newroomSwitch: false
