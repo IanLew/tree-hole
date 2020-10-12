@@ -134,7 +134,7 @@
 
 <script>
 import moment from 'moment';
-import { getCurrentInstance, ref, reactive } from 'vue';
+import { getCurrentInstance, ref } from 'vue';
 import { NavBar, Form, Uploader, Field, Button, Popup, Picker, DatetimePicker, Area } from 'vant';
 import areaList from '@/utils/area';
 import { uploadFile, updateUserInfo, getUserInfo } from '@/apis';
@@ -185,38 +185,30 @@ export default {
     });
     const avatar = ref([]);
 
-    const state = reactive({
-      userInfo,
-      gender,
-      birthday,
-      avatar,
-      area
-    });
-
     getUserInfo({
       userid: ctx.$store.getters.user.userid
     }).then(res => {
-      state.userInfo = res;
+      userInfo.value = res;
 
       if (res.gender >= 0) {
-        const gender = genderCols.find(v => v.tag === res.gender);
-        if (gender) {
-          state.gender = {
-            text: gender.text,
-            index: gender.tag
+        const _gender = genderCols.find(v => v.tag === res.gender);
+        if (_gender) {
+          gender.value = {
+            text: _gender.text,
+            index: _gender.tag
           };
         }
       }
       
       if (res.birthday) {
-        state.birthday = {
+        birthday.value = {
           text: res.birthday,
           time: new Date(res.birthday.replace(/-/g, '/'))
         };
       }
 
       if (res.avatar) {
-        state.avatar = [{ 
+        avatar.value = [{ 
           url: res.avatar.replace(/^(.+:\/\/).+(:.+)$/g, `$1${location.hostname}$2`) 
         }];
       }
@@ -224,7 +216,7 @@ export default {
       if (res.district) {
         const district = Object.entries(areaList.county_list).find(v => v[1] === res.district);
         if (district) {
-          state.area = {
+          area.value = {
             text: `${res.province} ${res.city} ${res.district}`,
             code: district[0]
           };
@@ -240,8 +232,8 @@ export default {
       area,
       avatar,
       onSubmit (values) {
-        Object.assign(values, state.userInfo, {
-          userid: ctx.$store.getters.userid
+        Object.assign(values, userInfo.value, {
+          userid: ctx.$store.getters.user.userid
         });
         let params = {};
         for(let [k, v] of Object.entries(values)) {

@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { getCurrentInstance, ref, reactive } from 'vue';
+import { getCurrentInstance, ref } from 'vue';
 import { Image, Cell, CellGroup, Loading } from 'vant';
 import { getUserInfo } from '@/apis';
 
@@ -41,11 +41,6 @@ export default {
     const userInfo = ref({});
     const isLoaded = ref(false);
 
-    const state = reactive({
-      userInfo,
-      isLoaded
-    });
-
     const defaultAvatar = require('@/assets/logo.png');
 
     if (ctx.$store.getters.user) {
@@ -56,15 +51,15 @@ export default {
       }).then(res => {
         res.nickname = res.nickname || `Tourist${res.userid}`;
         res.avatar = res.avatar.replace(/^(.+:\/\/).+(:.+)$/g, `$1${location.hostname}$2`);
-        state.userInfo = res;
-        state.isLoaded = true;
+        userInfo.value = res;
+        isLoaded.value = true;
       }).catch(() => {
-        state.userInfo.avatar = defaultAvatar;
-        state.isLoaded = true;
+        userInfo.value.avatar = defaultAvatar;
+        isLoaded.value = true;
       });
     } else {
-      state.userInfo.avatar = defaultAvatar;
-      state.isLoaded = true;
+      userInfo.value.avatar = defaultAvatar;
+      isLoaded.value = true;
     }
     
     return {

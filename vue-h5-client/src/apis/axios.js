@@ -52,8 +52,6 @@ const $axios = axios.create({
 });
 
 $axios.interceptors.request.use(config => {
-  console.log(config)
-
   config.cancelToken = loading.source.token;
 
   if (store.getters.user) {
