@@ -1,0 +1,41 @@
+.ellipsis {
+	@include ellipsis;
+}
+.clearfix {
+	@extend %clearfix;
+}
+.flex, [class*="flex-"]:not(.flex-fill) {
+	@include flex;
+}
+.iflex, [class*="iflex-"]:not(.flex-fill) {
+	@include flex(true);
+}
+.flex, .iflex {
+	&-hc {
+		@include flex-align(center);
+	}
+	&-vc {
+		@include flex-align(null, center);
+	}
+	&-hcc {
+		@include flex-align(center, center);
+	}
+	&-vcc {
+		@include flex-align(center, center);
+		@include flex-flow(column);
+	}
+	&-hb {
+		@include flex-align(space-between);
+	}
+	&-vb {
+		@include flex-align(space-between);
+		@include flex-flow(column);
+	}
+	&-wrap {
+		@include flex-flow(null, wrap);
+	}
+	&-fill {
+		@include flex-item(1);
+		overflow: hidden;
+	}
+}

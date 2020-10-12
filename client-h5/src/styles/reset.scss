@@ -1,0 +1,77 @@
+* {
+  margin: 0;
+  padding: 0;
+  &, &:after, &:before {
+    box-sizing:border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+	&::-webkit-scrollbar {
+    display: none;
+	}
+}
+address, cite, dfn, em, var {
+	font-style: normal;
+}
+ul, ol, li {
+	list-style: none;
+}
+a {
+  color: $base-color;
+  cursor: pointer;
+  text-decoration: none;
+}
+img {
+  &.prevent {
+    pointer-events: none;
+  }
+}
+fieldset, img, button {
+	border: none 0;
+}
+button, input, select, textarea {
+  font-size: inherit;
+  vertical-align: middle;
+}
+button { 
+	background: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+em {
+	font-style: normal;
+}
+textarea, input {
+  appearance: none;
+  display: block;
+  &::-webkit-input-placeholder {
+    color: $disable-color;
+  }
+}
+input {
+  @each $value in checkbox, radio, file {
+    &[type=#{$value}] {
+      opacity: 0;
+    };
+  }
+}
+@for $value from 1 through 6 {
+  h#{$value} {
+    font-size: inherit;
+    font-weight: normal;
+  }
+}
+html, body {
+  width:100%;
+  height: 100%;
+}
+body {
+  background-color: $background-color;
+  color: $base-color;
+	font-family: $base-font;
+  font-size: $base-font-size;
+	line-height: 1.15;
+  text-size-adjust: none;
+  user-select: none;
+}
