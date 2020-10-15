@@ -2,44 +2,42 @@ const jwt = require('jsonwebtoken');
 const cryptoJs = require('crypto-js');
 const intid = require('intid');
 const model = require('../model/index');
+const { mode } = require('crypto-js');
 
 class UsersAuth {
   static async register(ctx) {
     const req = ctx.request.body;
     if (req.account && req.password) {
-      const user = await model.usersAuth.findOne({
+      const info = await model.usersAuth.findOne({
         where: {
           account: req.account
         }
       });
-      if (user) {
+      if (info) {
         ctx.body = {
           code: 901,
           message: '账号已存在',
           data: null
         };
       } else {
-        const bytes = cryptoJs.AES.decrypt(req.password, 'tree-hole');
-        const info = await model.users.create({
-          userid: intid(10)
-        });
-        const auth = await model.usersAuth.create({
-          userid: info.userid,
-          account: req.account,
-          password: bytes.toString(cryptoJs.enc.Utf8)
-        });
-        if (auth) {
+        try {
+          const bytes = cryptoJs.AES.decrypt(req.password, 'tree-hole');
+          const userid = intid(9)
+          await model.usersAuth.create({
+            userid,
+            account: req.account,
+            password: bytes.toString(cryptoJs.enc.Utf8)
+          });
+          await model.users.create({
+            userid,
+            nickname: req.account
+          });
           ctx.body = {
             code: 200,
             message: '账号注册成功',
             data: null
           };
-        } else {
-          await model.users.destroy({
-            where: {
-              id: info.id
-            }
-          })
+        } catch {
           ctx.body = {
             code: 902,
             message: '账号注册失败',
@@ -83,19 +81,19 @@ class UsersAuth {
         };
       } else {
         ctx.body = {
-          code: 500,
+          code: 902,
           message: '账号或密码错误',
           data: null
         };
       }
     } else {
       ctx.body = {
-        code: 500,
+        code: 900,
         message: '缺少必要参数',
         data: null
       };
     }
   }
-};
+}
 
 module.exports = UsersAuth;

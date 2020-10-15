@@ -64,12 +64,12 @@ export default {
     return {
       account: '',
       password: '',
-      repeatPassword: ''
+      repeatPassword: '',
     }
   },
   setup() {
     const  { ctx } = getCurrentInstance();
-
+    
     return {
       onSubmit (values) {
         const password = md5(values.password);

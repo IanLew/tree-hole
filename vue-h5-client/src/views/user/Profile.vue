@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="user-profile">
     <van-nav-bar 
       title="修改信息" 
       left-arrow
@@ -140,7 +140,7 @@ import areaList from '@/utils/area';
 import { uploadFile, updateUserInfo, getUserInfo } from '@/apis';
 
 export default {
-  name: 'Profile',
+  name: 'UserProfile',
   components: {
     [NavBar.name]: NavBar,
     [Form.name]: Form,
@@ -208,6 +208,7 @@ export default {
       }
 
       if (res.avatar) {
+        // 经常本地跟换IP，为保持头像地址可用
         avatar.value = [{ 
           url: res.avatar.replace(/^(.+:\/\/).+(:.+)$/g, `$1${location.hostname}$2`) 
         }];

@@ -12,7 +12,7 @@
       </div>
     </div>
     <van-cell-group class="cutline">
-      <van-cell title="消息" icon="chat-o" is-link />
+      <van-cell :to="{ name: 'Message' }" title="消息" icon="chat-o" is-link />
       <van-cell title="设置" icon="setting-o" is-link />
     </van-cell-group>
   </div>
@@ -49,8 +49,9 @@ export default {
       }, {
         silent: true
       }).then(res => {
-        res.nickname = res.nickname || `Tourist${res.userid}`;
-        res.avatar = res.avatar.replace(/^(.+:\/\/).+(:.+)$/g, `$1${location.hostname}$2`);
+        // 经常本地跟换IP，为保持头像地址可用
+        res.avatar = res.avatar ? res.avatar.replace(/^(.+:\/\/).+(:.+)$/g, `$1${location.hostname}$2`) : defaultAvatar;
+        
         userInfo.value = res;
         isLoaded.value = true;
       }).catch(() => {
@@ -68,7 +69,7 @@ export default {
       gotoProfile () {
         if (this.isLoaded) {
           ctx.$router.push({
-            name: userInfo.value.userid ? 'Profile' : 'Login'
+            name: userInfo.value.userid ? 'UserProfile' : 'Login'
           });
         }
       }

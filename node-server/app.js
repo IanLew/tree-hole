@@ -32,6 +32,7 @@ app.use(async (ctx, next) => {
       }
     }
   } catch (err) {
+    console.log(err)
     if (err.status === 401) {
       ctx.body = {
         code: err.status,

@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper circle">
-    circle page
+    <div class="wellcome">欢迎来到树洞！</div>
+    
   </div>
 </template>
 

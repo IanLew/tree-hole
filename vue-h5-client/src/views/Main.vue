@@ -31,8 +31,8 @@ export default {
     const route = ctx.$router.currentRoute.value;
     
     const menus = [
-      { to: {name: 'Home' }, icon: 'home-o', name: '首页' },
-      { to: {name: 'Circle' }, icon: 'circle', name: '树洞' },
+      { to: {name: 'Home' }, icon: 'home-o', name: '树洞' },
+      // { to: {name: 'Circle' }, icon: 'circle', name: '树洞' },
       { to: {name: 'Mine' }, icon: 'contact', name: '我的' }
     ];
 

@@ -1,4 +1,4 @@
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../database/index');
 
 const users = sequelize.define('users', {
@@ -17,7 +17,7 @@ const users = sequelize.define('users', {
     comment: '昵称'
   },
   identity: {
-    type: DataTypes.INTEGER(1),
+    type: DataTypes.INTEGER,
     defaultValue: 0,
     comment: '身份：0-开发者，1-倾听者，2-倾述者，3-执法者'
   },
@@ -26,7 +26,7 @@ const users = sequelize.define('users', {
     comment: '头像'
   },
   gender: {
-    type: DataTypes.INTEGER(1),
+    type: DataTypes.INTEGER,
     comment: '性别'
   },
   birthday: {

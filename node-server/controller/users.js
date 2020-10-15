@@ -4,29 +4,37 @@ class Users {
   static async alterInfo(ctx) {
     const req = ctx.request.body;
     if (req.userid) {
-      const res = await model.users.update({
-        nickname: req.nickname,
-        identity: req.identity,
-        avatar: req.avatar,
-        gender: req.gender,
-        birthday: req.birthday,
-        email: req.email,
-        mobile: req.mobile,
-        province: req.province,
-        city: req.city,
-        district: req.district,
-        address: req.address,
-        hobby: req.hobby
-      }, {
-        where: {
-          userid: req.userid
-        }
-      });
-      ctx.body = {
-        code: res ? 200 : 905,
-        message: `用户信息修改${res ? '成功' : '失败'}`,
-        data: res
-      };
+      try {
+        const res = await model.users.update({
+          nickname: req.nickname,
+          identity: req.identity,
+          avatar: req.avatar,
+          gender: req.gender,
+          birthday: req.birthday,
+          email: req.email,
+          mobile: req.mobile,
+          province: req.province,
+          city: req.city,
+          district: req.district,
+          address: req.address,
+          hobby: req.hobby
+        }, {
+          where: {
+            userid: req.userid
+          }
+        });
+        ctx.body = {
+          code: 200,
+          message: '用户信息修改成功',
+          data: res
+        };
+      } catch {
+        ctx.body = {
+          code: 905,
+          message: '用户信息修改成功失败',
+          data: null
+        };
+      }
     } else {
       ctx.body = {
         code: 900,
@@ -57,6 +65,6 @@ class Users {
       };
     }
   }
-};
+}
 
 module.exports = Users;

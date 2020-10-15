@@ -12,11 +12,11 @@ const routes = [
         name: 'Home',
         component: () => import('@/views/Home.vue')
       },
-      {
-        path: '/circle',
-        name: 'Circle',
-        component: () => import('@/views/Circle.vue')
-      },
+      // {
+      //   path: '/circle',
+      //   name: 'Circle',
+      //   component: () => import('@/views/Circle.vue')
+      // },
       {
         path: '/mine',
         name: 'Mine',
@@ -33,9 +33,19 @@ const routes = [
     component: () => import('@/views/Login.vue')
   },
   {
-    path: '/profile',
-    name: 'Profile',
-    component: () => import('@/views/Profile.vue')
+    path: '/user/profile',
+    name: 'UserProfile',
+    component: () => import('@/views/user/Profile.vue')
+  },
+  {
+    path: '/message',
+    name: 'Message',
+    component: () => import('@/views/message/Index.vue')
+  },
+  {
+    path: '/message/send',
+    name: 'SendMessage',
+    component: () => import('@/views/message/Send.vue')
   },
   {
     path: '/register',
