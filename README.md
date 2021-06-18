@@ -1,5 +1,4 @@
-# Tree-hole
-The project creates a community of voices.
+# tree-hole
 
 ## Project setup
 ```
