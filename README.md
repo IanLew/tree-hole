@@ -1,5 +1,5 @@
 # Tree-hole
-This is a vue project of front-end. The project creates a community of voices, please expect it to become a mature product.
+The project creates a community of voices.
 
 ## Install dependency
 ```bash
