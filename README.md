@@ -1,21 +1,25 @@
 # Tree-hole
 The project creates a community of voices.
 
-## Install dependency
-```bash
-npm i
+## Project setup
+```
+npm install
 ```
 
-## Build & Run
-```bash
-# development
+### Compiles and hot-reloads for development
+```
 npm run serve
 ```
-Run: http://localhost:8080
 
-```bash
-# test server
-npm run debug
-# production server
+### Compiles and minifies for production
+```
 npm run build
 ```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
