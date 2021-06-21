@@ -1,27 +1,34 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <a-config-provider :locale="zhCN" :getPopupContainer="getPopupContainer">
+    <router-view />
+  </a-config-provider>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import zhCN from 'ant-design-vue/es/locale/zh_CN'
 
 export default defineComponent({
   name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      zhCN
+    }
+  },
+  methods: {
+    getPopupContainer(el, dialogContext) {
+      return dialogContext ? dialogContext.getDialogWrap() : document.body
+    }
   }
 })
 </script>
 
-<style>
+<style lang="less">
+html, body {
+  width: 100%;
+  height: 100%;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  height: inherit;
 }
 </style>

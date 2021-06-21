@@ -1,16 +1,21 @@
 {
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",
-    "serve": "vite preview"
+    "serve": "vite preview --host"
   },
   "dependencies": {
-    "vue": "^3.0.5"
+    "ant-design-vue": "^2.2.0-beta.3",
+    "vue": "^3.0.5",
+    "vue-router": "^4.0.9",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.5",
+    "less": "^4.1.1",
+    "less-loader": "^10.0.0",
     "typescript": "^4.3.2",
     "vite": "^2.3.7",
     "vue-tsc": "^0.0.24"
