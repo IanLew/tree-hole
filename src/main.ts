@@ -3,16 +3,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import * as anticon from '@ant-design/icons-vue'
-import antd from 'ant-design-vue'
-import './styles/antd.less'
+import 'amfe-flexible'
+import vant from 'vant'
+import 'vant/lib/index.css'
 
 const app = createApp(App)
 
-for (let [key, value] of Object.entries(anticon)) {
-  app.component(key, value)
-}
-app.config.globalProperties.$anticon = anticon
-
-app.use(store).use(router).use(antd)
+app.use(store).use(router).use(vant)
 app.mount('#app')

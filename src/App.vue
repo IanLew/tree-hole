@@ -1,25 +1,12 @@
 <template>
-  <a-config-provider :locale="zhCN" :getPopupContainer="getPopupContainer">
-    <router-view />
-  </a-config-provider>
+  <router-view />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import zhCN from 'ant-design-vue/es/locale/zh_CN'
 
 export default defineComponent({
-  name: 'App',
-  data() {
-    return {
-      zhCN
-    }
-  },
-  methods: {
-    getPopupContainer(el, dialogContext) {
-      return dialogContext ? dialogContext.getDialogWrap() : document.body
-    }
-  }
+  name: 'App'
 })
 </script>
 
