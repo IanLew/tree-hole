@@ -1,0 +1,40 @@
+.ellipsis(@line: 1) when(@line = 1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ellipsis(@line) when(@line > 1) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: @line;
+  overflow: hidden;
+  word-break: break-all;
+}
+.clearfix {
+  zoom: 1;
+	&::before, &::after {
+		content: '';
+		display: table;
+	}
+	&::after {
+		width: 0;
+		clear: both;
+	}
+}
+.scrollbar {
+  &::-webkit-scrollbar {
+    width: 2px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgb(231, 231, 231);
+    border-radius: 0;
+    border: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgb(180, 180, 180);
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgb(151, 151, 151);
+  }
+}

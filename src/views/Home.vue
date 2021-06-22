@@ -1,18 +1,29 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+  <div class="test">测试</div>
+  <van-tabbar v-model="activeMenu">
+    <van-tabbar-item icon="home-o">树洞</van-tabbar-item>
+    <van-tabbar-item icon="chat-o" badge="99+">消息</van-tabbar-item>
+    <van-tabbar-item icon="user-o">我的</van-tabbar-item>
+  </van-tabbar>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import { defineComponent, ref } from 'vue'
 
-@Options({
-  components: {
-    HelloWorld,
-  },
+export default defineComponent({
+  name: 'home',
+  setup() {
+    const activeMenu = ref(0)
+
+    return {
+      activeMenu
+    }
+  }
 })
-export default class Home extends Vue {}
 </script>
+
+<style lang="less" scoped>
+.test {
+  font-size: 75px;
+}
+</style>
