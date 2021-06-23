@@ -16,6 +16,6 @@ html, body {
   height: 100%;
 }
 #app {
-  height: inherit;
+  position: relative;
 }
 </style>
