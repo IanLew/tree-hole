@@ -5,7 +5,11 @@
       :finished="dataState.finished"
       :finished-text="dataState.list.length > 0 && dataState.finished ? '—— 我们是有底线的 ——' : ''"
       @load="getDataList">
-      <div v-for="item in dataState.list" :key="item" class="message">
+      <router-link
+        v-for="item in dataState.list"
+        :key="item"
+        :to="{name: 'messageDetail'}"
+        class="msgdata">
         <section class="main">
           <div class="user">
             <van-image
@@ -20,7 +24,6 @@
             </van-image>
             <div class="user-info">
               <p class="nickname">测试昵称</p>
-              <p class="group">分组测试</p>
             </div>
           </div>
           <div class="content">
@@ -50,11 +53,15 @@
           </div>
         </section>
         <section class="addition">
-          <van-button type="default" size="mini" icon="share-o" @click="() => (showShare = true)">分享</van-button>
-          <van-button type="default" size="mini" icon="chat-o">评论</van-button>
-          <van-button type="default" size="mini" icon="thumb-circle-o">点赞</van-button>
+          <van-button
+            type="default"
+            size="mini"
+            icon="share-o"
+            @click.prevent="() => (showShare = true)">分享</van-button>
+          <van-button type="default" size="mini" icon="chat-o">回复</van-button>
+          <van-button type="default" size="mini" icon="good-job-o">赞同</van-button>
         </section>
-      </div>
+      </router-link>
     </van-list>
     <van-empty v-if="dataState.finished && dataState.list.length === 0" description="暂无数据" />
     <van-share-sheet
@@ -125,13 +132,11 @@ export default defineComponent({
   padding-bottom: 50px;
   min-height: 100vh;
 }
-.test {
-  font-size: 75px;
-}
-.message {
+.msgdata {
   background-color: #fff;
+  display: block;
   padding: 12px 16px;
-  &+.message {
+  &+.msgdata {
     border-top: 6px solid #eee;
   }
   .main {
@@ -146,68 +151,69 @@ export default defineComponent({
       margin-top: 10px;
     }
   }
-}
-.user {
-  display: flex;
-  align-items: center;
-  .avatar {
-    width: 38px;
-    height: 38px;
-    margin-right: 10px;
-    flex-shrink: 0;
-  }
-  .user-info {
-    font-size: 14px;
-    flex: 1;
-    overflow: hidden;
-    &>p {
-      margin: 0;
-      .ellipsis();
-      &+p {
-        margin-top: 4px;
+  .user {
+    display: flex;
+    align-items: center;
+    .avatar {
+      width: 38px;
+      height: 38px;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    .user-info {
+      font-size: 14px;
+      flex: 1;
+      overflow: hidden;
+      &>p {
+        margin: 0;
+        .ellipsis();
+        &+p {
+          margin-top: 4px;
+        }
+      }
+      .nickname {
+        color: #666;
+      }
+      .group {
+        color: #999;
       }
     }
-    .nickname {
-      color: #444;
+  }
+  .content {
+    &>* {
+      &+* {
+        margin-top: 10px;
+      }
     }
-    .group {
-      color: #999;
+    .text {
+      color: #222;
+      font-size: 16px;
+    }
+    .van-image {
+      display: block;
+    }
+    :deep(.simple-img) {
+      .van-image__img {
+        max-height: 200px;
+        object-position: 0 0;
+      }
+    }
+    .multi {
+      display: grid;
+      grid-template-columns: repeat(3, 110px);
+      grid-template-rows: repeat(3, 110px);
+      grid-gap: 6px 6px;
     }
   }
-}
-.content {
-  &>* {
-    &+* {
-      margin-top: 10px;
-    }
-  }
-  .cnt-text {
-    font-size: 16px;
-  }
-  .van-image {
-    display: block;
-  }
-  :deep(.simple-img) {
-    .van-image__img {
-      max-height: 200px;
-      object-position: 0 0;
-    }
-  }
-  .multi {
-    display: grid;
-    grid-template-columns: repeat(3, 112px);
-    grid-template-rows: repeat(3, 112px);
-    grid-gap: 7px 7px;
-  }
-}
-.addition {
-  display: flex;
-  justify-content: space-between;
-  .van-button {
-    border: none;
-    font-size: 14px;
-    &:active::before {
-      opacity: 0;
+  .addition {
+    display: flex;
+    justify-content: space-between;
+    .van-button {
+      border: none;
+      font-size: 14px;
+      &:active::before {
+        opacity: 0;
+      }
     }
   }
 }
