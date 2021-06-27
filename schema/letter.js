@@ -21,7 +21,7 @@ module.exports = sequelize.define('letter', {
     comment: '内容'
   },
   image: {
-    type: DataTypes.ARRAY,
+    type: DataTypes.STRING,
     allowNull: true,
     field: 'image',
     comment: '图片'
