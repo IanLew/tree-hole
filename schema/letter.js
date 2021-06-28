@@ -10,9 +10,15 @@ module.exports = sequelize.define('letter', {
   },
   category: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     field: 'category',
-    comment: '类型：0-树洞'
+    comment: '类型：1-树洞'
+  },
+  replyId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    field: 'replyId',
+    comment: '回复信笺id'
   },
   content: {
     type: DataTypes.STRING,
@@ -20,23 +26,23 @@ module.exports = sequelize.define('letter', {
     field: 'content',
     comment: '内容'
   },
-  image: {
+  images: {
     type: DataTypes.STRING,
     allowNull: true,
-    field: 'image',
+    field: 'images',
     comment: '图片'
   },
   sender: {
     type: DataTypes.INTEGER,
     allowNull: false,
     field: 'sender',
-    comment: '发送者'
+    comment: '发送者编码'
   },
   receiver: {
     type: DataTypes.INTEGER,
-    allowNull: true,
+    allowNull: false,
     field: 'receiver',
-    comment: '接收者'
+    comment: '接收者编码'
   },
   read: {
     type: DataTypes.BOOLEAN,
