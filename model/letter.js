@@ -1,4 +1,5 @@
 const { Op } = require('sequelize')
+const sequelize = require('../sequelize')
 const letter = require('../schema/letter')
 
 class LetterModel {
@@ -22,34 +23,39 @@ class LetterModel {
     })
   }
 
-  static async getLetters({ limit, offset, type }) {
-    if (type) {
-      return await letter.findAndCountAll({
-        attributes: {
-          exclude: ['receiver', 'read']
-        },
-        where: {
-          replyId: {
-            [Op.not]: null
-          }
-        },
-        limit,
-        offset
-      })
-    } else {
-      return await letter.findAndCountAll({
-        attributes: {
-          exclude: ['receiver', 'read']
-        },
-        where: {
-          replyId: {
-            [Op.eq]: null
-          }
-        },
-        limit,
-        offset
-      })
-    }
+  static async getLetters({ limit, offset, replyId }) {
+    return await letter.findAndCountAll({
+      attributes: {
+        exclude: ['receiver', 'read']
+      },
+      where: {
+        replyId: replyId || {
+          [Op.not]: null
+        }
+      },
+      limit,
+      offset
+    })
+  }
+
+  static async getLettersData({ limit, offset }) {
+    return await letter.findAll({
+      attributes: {
+        exclude: ['receiver', 'read'],
+        include: [
+          [sequelize.literal(`(SELECT COUNT(*) FROM letterlog WHERE letterid = id AND action = 2)`), 'shareTotal'],
+          [sequelize.literal(`(SELECT COUNT(*) FROM letterlog WHERE letterid = id AND (action = 0 OR action = 1))`), 'actionTotal'],
+          [sequelize.literal(`(SELECT COUNT(*) FROM letter WHERE replyId = id)`), 'replyTotal']
+        ]
+      },
+      where: {
+        replyId: {
+          [Op.not]: null
+        }
+      },
+      limit,
+      offset
+    })
   }
 
   static async updateRead(ids) {

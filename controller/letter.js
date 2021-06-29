@@ -67,8 +67,40 @@ class LetterController {
       const res = await LetterModel.getLetters({
         offset: (pageNo - 1) * pageNo,
         limit: pageSize,
-        type: !!(fields ? fields.type : fields)
+        replyId: fields ? fields.replyId : null
       })
+      ctx.response.status = 200
+      ctx.body = {
+        code: ctx.response.status,
+        message: '查询成功',
+        data: {
+          pageNo,
+          pageSize,
+          pages: Math.ceil(res.count / pageSize),
+          total: res.count,
+          list: res.rows
+        }
+      }
+    } catch(err) {
+      ctx.response.status = 412
+      ctx.body = {
+        code: ctx.response.status,
+        message: '查询失败',
+        data: null
+      }
+    }
+  }
+
+  static async datas(ctx) {
+    let { pageNo, pageSize } = ctx.query
+    pageNo = pageNo || 1
+    pageSize = pageSize || 10
+    try {
+      const res = await LetterModel.getLettersData({
+        offset: (pageNo - 1) * pageNo,
+        limit: pageSize
+      })
+      console.log(res)
       ctx.response.status = 200
       ctx.body = {
         code: ctx.response.status,

@@ -9,6 +9,7 @@ const router = new Router({
 router.post('/letter/create', LetterController.create)
 router.get('/letter/detail/:id', LetterController.detail)
 router.get('/letter/list', LetterController.list)
+router.get('/letter/datas', LetterController.datas)
 router.put('/letter/read/:id', LetterController.read)
 
 router.post('/letterlog/create', LetterlogController.create)

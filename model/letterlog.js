@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const letter = require('../schema/letter')
 const letterlog = require('../schema/letterlog')
 
@@ -27,10 +28,7 @@ class LetterlogModel {
     })
     const replyTotal = await letter.count({
       where: {
-        id: letterid,
-        replyId: {
-          [Op.not]: null
-        }
+        replyId: letterid
       }
     })
     return {
