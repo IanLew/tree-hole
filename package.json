@@ -10,8 +10,10 @@
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "debug": "^3.2.7",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.1",
     "koa-body": "^4.2.0",
+    "koa-jwt": "^4.0.1",
     "koa-morgan": "^1.0.1",
     "koa-router": "^10.0.0",
     "moment": "^2.29.1",

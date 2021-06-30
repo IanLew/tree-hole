@@ -1,6 +1,11 @@
-const { Op } = require('sequelize')
 const sequelize = require('../sequelize')
 const letter = require('../schema/letter')
+const letterlog = require('../schema/letterlog')
+
+letter.hasMany(letterlog, {
+  foreignKey: 'letterId'
+})
+letterlog.belongsTo(letter)
 
 class LetterModel {
   static async createLetter(data) {
@@ -26,32 +31,15 @@ class LetterModel {
   static async getLetters({ limit, offset, replyId }) {
     return await letter.findAndCountAll({
       attributes: {
-        exclude: ['receiver', 'read']
-      },
-      where: {
-        replyId: replyId || {
-          [Op.not]: null
-        }
-      },
-      limit,
-      offset
-    })
-  }
-
-  static async getLettersData({ limit, offset }) {
-    return await letter.findAll({
-      attributes: {
         exclude: ['receiver', 'read'],
         include: [
-          [sequelize.literal(`(SELECT COUNT(*) FROM letterlog WHERE letterid = id AND action = 2)`), 'shareTotal'],
-          [sequelize.literal(`(SELECT COUNT(*) FROM letterlog WHERE letterid = id AND (action = 0 OR action = 1))`), 'actionTotal'],
-          [sequelize.literal(`(SELECT COUNT(*) FROM letter WHERE replyId = id)`), 'replyTotal']
+          [sequelize.literal(`(SELECT COUNT(*) FROM letterlog WHERE letterid = letter.id AND action = 2)`), 'shareTotal'],
+          [sequelize.literal(`(SELECT COUNT(*) FROM letterlog WHERE letterid = letter.id AND (action = 0 OR action = 1))`), 'mannerTotal'],
+          [sequelize.literal(`(SELECT COUNT(*) FROM letter as a WHERE a.replyId = letter.id)`), 'replyTotal']
         ]
       },
       where: {
-        replyId: {
-          [Op.not]: null
-        }
+        replyId
       },
       limit,
       offset

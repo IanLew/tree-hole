@@ -22,7 +22,7 @@ module.exports = sequelize.define('letterlog', {
   },
   operator: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     field: 'operatorId',
     comment: '操作人编码'
   }

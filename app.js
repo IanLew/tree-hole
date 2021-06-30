@@ -2,6 +2,7 @@ const Koa = require('koa')
 const body = require('koa-body')
 const morgan = require('koa-morgan')
 const cors = require('@koa/cors')
+const jwt = require('koa-jwt')
 
 const router = require('./routes')
 
@@ -28,6 +29,12 @@ app.use(async (ctx, next) => {
     ctx.app.emit('error', err, ctx)
   }
 })
+
+app.use(jwt({
+  secret: 'tree-hole'
+}).unless({
+  path: /^((?!token).)*$/
+}))
 
 app.use(router.routes())
 
