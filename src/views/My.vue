@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="notice">
-      <van-button type="primary" size="normal" :to="{name: 'notice'}">
+      <van-button type="primary" size="normal" :to="{name: 'myNotice'}">
         <template #icon>
           <van-badge dot>
             <van-icon name="bell" />
@@ -12,9 +12,8 @@
     <div class="info">
       <div class="user">
         <van-image
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="userinfo.avatar || ' '"
           round
-          lazy-load
           fit="cover"
           class="avatar">
           <template v-slot:loading>
@@ -22,30 +21,19 @@
           </template>
         </van-image>
         <div class="user-info">
-          <p class="nickname">测试昵称</p>
-          <p class="manifesto">这个娃儿啥也没留下</p>
+          <template v-if="userinfo.id">
+            <p class="nickname">{{ userinfo.nickname || userinfo.account }}</p>
+            <p class="manifesto">{{ userinfo.manifesto || '这个娃儿啥也没留下' }}</p>
+          </template>
+          <p v-else class="nickname">请登录</p>
         </div>
         <van-button
-          :to="{name: 'userProfile'}"
+          :to="{name: 'myProfile'}"
           round
           plain
           hairline
           type="default"
           size="small">编辑资料</van-button>
-      </div>
-    </div>
-    <div class="datas">
-      <div class="data">
-        <span class="n">1000</span>
-        <span class="t">分享</span>
-      </div>
-      <div class="data">
-        <span class="n">1000</span>
-        <span class="t">回复</span>
-      </div>
-      <div class="data">
-        <span class="n">1000</span>
-        <span class="t">赞同</span>
       </div>
     </div>
   </header>
@@ -59,7 +47,7 @@
         <router-link
           v-for="item in dataState.list"
           :key="item"
-          :to="{name: 'messageDetail'}"
+          :to="{name: 'letterDetail'}"
           class="msgdata">
           <section class="main">
             <div class="user">
@@ -118,7 +106,7 @@
         :finished="replyState.finished"
         :finished-text="replyState.list.length > 0 && replyState.finished ? '—— 我们是有底线的 ——' : ''"
         @load="getReplyList">
-        <router-link v-for="item in replyState.list" :key="item" :to="{name: 'messageDetail'}" class="reply">
+        <router-link v-for="item in replyState.list" :key="item" :to="{name: 'letterDetail'}" class="reply">
           <div class="from">
             <van-image
               src="https://img.yzcdn.cn/vant/cat.jpeg"
@@ -149,7 +137,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
+import { useStore } from 'vuex'
 import BottomMenu from '../components/BottomMenu.vue'
+import { apiLetterMylist } from '../apis'
 
 export default defineComponent({
   name: 'my',
@@ -158,28 +148,57 @@ export default defineComponent({
   },
   setup() {
     const activeTab = ref(0)
+    const store = useStore()
+    const userinfo = store.getters.userinfo
 
     const dataState = reactive({
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      pageNo: 1,
+      pageSize: 10
     })
 
     function getDataList() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          dataState.list.push(dataState.list.length + 1)
+      dataState.loading = true
+      apiLetterMylist({
+        data: {
+          pageNo: dataState.pageNo,
+          pageSize: dataState.pageSize,
+          fields: {
+            user: userinfo.id,
+            type: 1
+          }
         }
-
-        // 加载状态结束
+      }).then((res: any) => {
+        console.log(res)
         dataState.loading = false
-
-        // 数据全部加载完成
-        if (dataState.list.length >= 40) {
+        if (res && res.length > 0) {
+          dataState.pageNo++
+          dataState.list.push(...res)
+        } else {
           dataState.finished = true
         }
-      }, 1000)
+      }).catch(() => {
+        dataState.loading = false
+      })
     }
+
+    // function getDataList() {
+    //   setTimeout(() => {
+    //     for (let i = 0; i < 10; i++) {
+    //       dataState.list.push(dataState.list.length + 1)
+    //     }
+
+    //     // 加载状态结束
+    //     dataState.loading = false
+
+    //     // 数据全部加载完成
+    //     if (dataState.list.length >= 40) {
+    //       dataState.finished = true
+    //     }
+    //   }, 1000)
+    // }
 
     const replyState = reactive({
       list: [],
@@ -204,6 +223,7 @@ export default defineComponent({
     }
 
     return {
+      userinfo,
       activeTab,
       dataState,
       replyState,
@@ -247,7 +267,7 @@ export default defineComponent({
   .info {
     padding-left: 12px;
     padding-right: 12px;
-    margin-top: 24px;
+    margin-top: 48px;
     .user {
       display: flex;
       align-items: center;

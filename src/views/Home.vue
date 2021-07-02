@@ -8,7 +8,7 @@
       <router-link
         v-for="item in dataState.list"
         :key="item"
-        :to="{name: 'messageDetail'}"
+        :to="{name: 'letterDetail'}"
         class="msgdata">
         <section class="main">
           <div class="user">

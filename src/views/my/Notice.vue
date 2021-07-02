@@ -42,7 +42,7 @@
 import { defineComponent, reactive } from 'vue'
 
 export default defineComponent({
-  name: 'notice',
+  name: 'my-notice',
   setup() {
     const noticeState = reactive({
       list: [],

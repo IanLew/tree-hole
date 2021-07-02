@@ -4,6 +4,15 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+	server: {
+		proxy: {
+			'/api': {
+				target: 'http://192.168.2.74:3000',
+				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/api/, '/api')
+			}
+		}
+	},
   css: {
     preprocessorOptions: {
       less: {

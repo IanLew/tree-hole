@@ -1,70 +1,91 @@
 <template>
-  <div class="login">
-    <div class="login-box">
-      <h1>后台管理系统</h1>
-      <a-form :model="loginForm">
-        <a-form-item>
-          <a-input
-            v-model:value="loginForm.account" 
-            auto-complete="off"
-            placeholder="请输入账号"
-            size="large"
-            :maxlength="36">
-            <template #prefix>
-              <user-outlined type="user" />
-            </template>
-          </a-input>
-        </a-form-item>
-        <a-form-item style="margin-bottom: 10px;">
-          <a-input
-            v-model:value="loginForm.password"
-            type="password"
-            auto-complete="off"
-            placeholder="请输入登陆密码"
-            size="large">
-            <template #prefix>
-              <lock-outlined />
-            </template>
-          </a-input>
-        </a-form-item>
-        <a-form-item>
-          <a-checkbox v-model:checked="isRecordPwd">记住密码</a-checkbox>
-        </a-form-item>
-        <a-form-item class="btns">
-          <a-button
-            type="primary"
-            size="large"
-            style="width: 100%;"
-            @click="login"
-            @pressEnter="login">登录</a-button>
-        </a-form-item>
-      </a-form>
+  <van-nav-bar
+    title="登录"
+    left-text="返回"
+    right-text="注册"
+    left-arrow
+    :border="false"
+    @click-left="() => $router.go(-1)"
+    @click-right="$router.push({ name: 'register' })" />
+  <van-form @submit="login">
+    <van-cell-group inset :border="false">
+      <van-field
+        v-model="loginForm.account"
+        name="account"
+        label="账号"
+        placeholder="请输入账号"
+        :rules="[{ required: true, message: '请输入账号' }]"
+        @input="(e) => (loginForm.account = e.target.value.replace(/\s*/g, ''))" />
+      <van-field
+        v-model="loginForm.password"
+        type="password"
+        name="password"
+        label="密码"
+        placeholder="请输入密码"
+        :rules="[{ required: true, message: '请输入密码' }]" />
+      <van-field name="checkbox" :border="false">
+        <template #input>
+          <van-checkbox v-model="isRecord" shape="square" :disabled="true">记住密码</van-checkbox>
+        </template>
+        <template #button>
+          <van-button size="small" class="retrieve" :to="{ name: 'retrieve' }">忘记密码?</van-button>
+        </template>
+      </van-field>
+    </van-cell-group>
+    <div style="margin: 13.333vw 4.267vw 0;">
+      <van-button
+        round
+        block
+        type="primary"
+        native-type="submit" 
+        :loading="loading">登录</van-button>
     </div>
-  </div>
+  </van-form>
 </template>
 
 <script lang="ts">
+import { Notify } from 'vant'
 import { defineComponent, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { MD5 } from 'crypto-js'
+import { apiLogin } from '../apis'
 
 export default defineComponent({
   name: 'login',
   setup() {
     const router = useRouter()
+    const store = useStore()
 
-    const isRecordPwd = ref(false)
+    const isRecord = ref(true)
+    const loading = ref(false)
     const loginForm = reactive({
-			account: null,
-			password: null
-		})
+      account: '',
+      password: ''
+    })
 
-    // 登录
-    function login() {
-      router.push({ name: 'home' })
+    function login(v: any) {
+      loading.value = true
+      apiLogin({
+        account: v.account,
+        password: MD5(v.password).toString()
+      }).then((res) => {
+        store.commit('user', res)
+        loading.value = false
+        Notify({
+          type: 'success',
+          message: '登录成功'
+        })
+
+        router.go(-1)
+      }).catch(() => {
+        loading.value = false
+      })
     }
 
     return {
-      isRecordPwd,
+      loading,
+      isRecord,
       loginForm,
       login
     }
@@ -73,49 +94,14 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.login {
-  height: inherit;
-  background: url(http://inews.gtimg.com/newsapp_bt/0/5937865280/1000/0) no-repeat;
-  background-size: cover;
-  position: relative;
-  &::before {
-    background-color: rgba(0, 0, 0, .2);
-    backdrop-filter: blur(10px);
-    content: '';
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-  }
-  &-box {
-    background-color: #fff;
-    width: 450px;
-    height: 360px;
-    position: absolute;
-    margin: auto;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 2;
-  }
-  h1 {
-    color: @color-primary;
-    font-size: 30px;
-    text-align: center;
-    margin-top: 40px;
-    margin-bottom: 40px;
-  }
-  .ant-form-horizontal {
-    padding-left: 24px;
-    padding-right: 24px;
-  }
-  .anticon {
-    color: rgba(0, 0, 0, .3);
-    font-size: 16px;
-  }
+.van-form {
+  margin-top: 50px;
+}
+.van-checkbox {
+  --van-checkbox-size: 15px;
+}
+.retrieve {
+  border: none;
+  --van-button-small-font-size: 14px;
 }
 </style>
