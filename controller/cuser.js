@@ -42,7 +42,7 @@ class CuserController {
     try {
       const res = await CuserModel.getUser(req)
       if (res) {
-        res.token = jsonwebtoken.sign({
+        const token = jsonwebtoken.sign({
           id: res.id,
           account: req.account,
           password: req.jsonwebtoken
@@ -52,7 +52,10 @@ class CuserController {
         ctx.body = {
           code: 200,
           message: '登录成功',
-          data: res
+          data: {
+            userinfo: res,
+            token
+          }
         }
       } else {
         ctx.body = {
@@ -96,26 +99,52 @@ class CuserController {
     }
   }
 
+  static async password(ctx) {
+    const req = ctx.request.body
+    if (req && req.account && req.password) {
+      try {
+        await CuserModel.updateProfile(req.account, {
+          password: req.password
+        })
+        ctx.body = {
+          code: 200,
+          message: '密码修改成功',
+          data: null
+        }
+      } catch(err) {
+        ctx.body = {
+          code: 412,
+          message: '密码修改失败',
+          data: null
+        }
+      }
+    } else {
+      ctx.body = {
+        code: 416,
+        message: '缺少必要参数',
+        data: null
+      }
+    }
+  }
+
   static async update(ctx) {
     const req = ctx.request.body
     if (req && req.account) {
       try {
         const account = req.account
         delete req.account
-        if (!req.password) {
-          delete req.password
-        }
         await CuserModel.updateProfile(account, req)
         const res = await CuserModel.getProfileByAccount(account)
         ctx.body = {
           code: 200,
-          message: '更新成功',
+          message: '资料更新成功',
           data: res
         }
       } catch(err) {
+        console.log(err)
         ctx.body = {
           code: 412,
-          message: '更新失败',
+          message: '资料更新失败',
           data: null
         }
       }

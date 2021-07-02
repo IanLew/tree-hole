@@ -17,7 +17,7 @@ class CuserModel {
   static async getUser(data) {
     return await cuser.findOne({
       attributes: {
-        exclude: ['account', 'password']
+        exclude: ['password']
       },
       where: {
         account: data.account,
@@ -38,7 +38,7 @@ class CuserModel {
   static async getProfileByAccount(account) {
     return await cuser.findOne({
       attributes: {
-        exclude: ['account', 'password']
+        exclude: ['password']
       },
       where: {
         account

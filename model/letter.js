@@ -46,6 +46,26 @@ class LetterModel {
     })
   }
 
+  static async getLettersByUser({ limit, offset, user, type }) {
+    return await letter.findAndCountAll({
+      attributes: {
+        exclude: ['receiver', 'read'],
+        include: [
+          [sequelize.literal(`(SELECT COUNT(*) FROM letterlog WHERE letterid = letter.id AND action = 2)`), 'shareTotal'],
+          [sequelize.literal(`(SELECT COUNT(*) FROM letterlog WHERE letterid = letter.id AND (action = 0 OR action = 1))`), 'mannerTotal'],
+          [sequelize.literal(`(SELECT COUNT(*) FROM letter as a WHERE a.replyId = letter.id)`), 'replyTotal']
+        ]
+      },
+      where: type ? {
+        sender: user
+      } : {
+        receiver: user
+      },
+      limit,
+      offset
+    })
+  }
+
   static async updateRead(ids) {
     if (Array.isArray(ids)) {
       return await letter.bulkCreate(ids.map(v => {

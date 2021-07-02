@@ -83,6 +83,45 @@ class LetterController {
     }
   }
 
+  static async mylist(ctx) {
+    let { pageNo, pageSize, fields } = ctx.request.body
+    pageNo = pageNo || 1
+    pageSize = pageSize || 10
+    if (fields && fields.user) {
+      try {
+        const res = await LetterModel.getLettersByUser({
+          offset: (pageNo - 1) * pageNo,
+          limit: pageSize,
+          user: fields.user,
+          type: fields.type || 1
+        })
+        ctx.body = {
+          code: 200,
+          message: '查询成功',
+          data: {
+            pageNo,
+            pageSize,
+            pages: Math.ceil(res.count / pageSize),
+            total: res.count,
+            list: res.rows
+          }
+        }
+      } catch(err) {
+        ctx.body = {
+          code: 412,
+          message: '查询失败',
+          data: null
+        }
+      }
+    } else {
+      ctx.body = {
+        code: 416,
+        message: '缺少必要参数',
+        data: null
+      }
+    }
+  }
+
   static async read(ctx) {
     const ids = ctx.request.body
     if (ids) {
