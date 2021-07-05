@@ -1,3 +1,4 @@
+const { Op, random } = require('sequelize')
 const cuser = require('../schema/cuser')
 const letter = require('../schema/letter')
 
@@ -23,6 +24,17 @@ class CuserModel {
         account: data.account,
         password: data.password
       }
+    })
+  }
+  
+  static async getUserRand(id) {
+    return await cuser.findOne({
+      // where: {
+      //   id: {
+      //     [Op.not]: id
+      //   }
+      // },
+      order: random()
     })
   }
 

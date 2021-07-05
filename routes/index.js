@@ -8,8 +8,8 @@ const router = new Router({
 })
 
 router.post('/token/letter/create', LetterController.create)
-router.get('/letter/list', LetterController.list)
-router.get('/token/letter/mylist', LetterController.mylist)
+router.post('/letter/list', LetterController.list)
+router.post('/token/letter/mylist', LetterController.mylist)
 router.get('/letter/detail/:id', LetterController.detail)
 router.put('/letter/read/:id', LetterController.read)
 

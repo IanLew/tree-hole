@@ -1,17 +1,26 @@
 const LetterModel = require('../model/letter')
+const CuserModel = require('../model/cuser')
 
 class LetterController {
   static async create(ctx) {
     const req = ctx.request.body
     if ((req.category || req.replyId) && req.content && req.sender) {
       try {
-        await LetterModel.createLetter(req)
+        if (req.replyId) {
+          await LetterModel.createLetter(req)
+        } else {
+          const user = await CuserModel.getUserRand(req.sender)
+          console.log(user)
+          await LetterModel.createLetter(req)
+        }
+        
         ctx.body = {
           code: 200,
           message: '创建成功',
           data: null
         }
       } catch(err) {
+        console.log(err)
         ctx.body = {
           code: 412,
           message: '创建失败',
@@ -61,7 +70,7 @@ class LetterController {
       const res = await LetterModel.getLetters({
         offset: (pageNo - 1) * pageNo,
         limit: pageSize,
-        replyId: fields ? fields.replyId : null
+        replyId: fields && fields.replyId || null
       })
       ctx.body = {
         code: 200,

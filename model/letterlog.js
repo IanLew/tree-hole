@@ -1,5 +1,3 @@
-const { Op } = require('sequelize')
-const letter = require('../schema/letter')
 const letterlog = require('../schema/letterlog')
 
 class LetterlogModel {
