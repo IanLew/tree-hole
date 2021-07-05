@@ -6,29 +6,37 @@
   </van-tabbar>
   <van-action-sheet v-model:show="showCreate" title="创建树洞">
     <van-form @submit="onSubmit" class="create-message">
-      <van-field
-        v-model="messageForm.type"
-        label="类型"
-        placeholder="请选择类型"
-        readonly
-        @click="() => (showCreateType = true)" />
-      <van-field
-        v-model="messageForm.content"
-        rows="3"
-        autosize
-        label="内容"
-        type="textarea"
-        placeholder="请输入内容" />
-      <van-cell :border="false">
-        <van-uploader
-          v-model="messageForm.images"
-          accept=".jpg,.jpeg,.png,.gif"
-          multiple
-          :max-size="1 * 1024 * 1024"
-          :max-count="9"
-          :beforeRead="onBeforeRead"
-          @oversize="onOversize" />
-      </van-cell>
+      <van-cell-group inset :border="false">
+        <van-field
+          v-model="messageForm.category"
+          label="类型"
+          name="category"
+          placeholder="请选择类型"
+          readonly
+          :rules="[{ required: true, message: '请选择类型' }]"
+          @click="() => (showCreateType = true)" />
+        <van-field
+          v-model.trim="messageForm.content"
+          rows="3"
+          autosize
+          label="内容"
+          name="content"
+          type="textarea"
+          placeholder="请输入内容"
+          :rules="[{ required: true, message: '请输入内容' }]" />
+        <van-field name="images" :border="false">
+          <template #input>
+            <van-uploader
+              v-model="messageForm.images"
+              accept=".jpg,.jpeg,.png,.gif"
+              multiple
+              :max-size="1 * 1024 * 1024"
+              :max-count="9"
+              :beforeRead="onBeforeRead"
+              @oversize="onOversize" />
+          </template>
+        </van-field>
+      </van-cell-group>
       <div style="padding: 4.267vw;">
         <van-button
           round
@@ -46,33 +54,46 @@
     <van-picker
       title="选择创建类型"
       :columns="typeCols"
+      :columns-field-names="{ text: 'label' }"
       @cancel="() => (showCreateType = false)"
       @confirm="(value) => (messageForm.type = value, showCreateType = false)" />
   </van-popup>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
-import { Toast } from 'vant'
+import { defineComponent, reactive, ref, toRaw } from 'vue'
+import { useStore } from 'vuex'
+import { Notify } from 'vant'
+import { apiCreateLetter } from '../apis'
 
 export default defineComponent({
   name: 'bottom-menu',
   setup() {
+    const store = useStore()
+    const userinfo: any = store.getters.userinfo
+
+    const loading = ref(false)
     const activeMenu = ref(0)
     const showCreate = ref(false)
     const showCreateType = ref(false)
-    const typeCols = ['树洞']
+    const typeCols = [{
+      label: '树洞',
+      value: 1
+    }]
     const messageForm = reactive({
-      type: '',
-      content: '',
+      category: typeCols[0].label,
+      content: '123',
       images: []
     })
 
     function onOversize() {
-      Toast('上传文件不能超过1M')
+      Notify({
+        type: 'danger',
+        message: '上传文件不能超过1M'
+      })
     }
 
-    function onBeforeRead(file) {
+    function onBeforeRead(file: any) {
       let files = file
       if (!Array.isArray(file)) {
         files = [file]
@@ -82,7 +103,10 @@ export default defineComponent({
         const isImage = ['jpg', 'jpeg', 'png', 'gif'].includes(suffix)
 
         if (!isImage) {
-          Toast(`不支持${suffix}格式`)
+          Notify({
+            type: 'danger',
+            message: `不支持${suffix}格式`
+          })
           return false
         }
       }
@@ -90,7 +114,24 @@ export default defineComponent({
       return true
     }
 
-    function onSubmit() {}
+    function onSubmit(value: any) {
+      loading.value = true
+      const category = typeCols.find(v => v.label === value.category)
+      apiCreateLetter({
+        category,
+        content: value.content,
+        images: value.images.length > 0 ? toRaw(value.images).join('|') : null,
+        sender: userinfo.id
+      }).then(() => {
+        loading.value = false
+        Notify({
+          type: 'success',
+          message: '提交成功'
+        })
+      }).catch(() => {
+        loading.value = false
+      })
+    }
 
     return {
       activeMenu,

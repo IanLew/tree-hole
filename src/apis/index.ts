@@ -7,5 +7,6 @@ export const apiUpdatePwd = (args: any, config?: AxiosRequestConfig) => $axios.p
 export const apiUpdateProfile = (args: any, config?: AxiosRequestConfig) => $axios.post('/token/cuser/update', args, config)
 export const apiGetProfile = (account: string, config?: AxiosRequestConfig) => $axios.get(`/token/cuser/profile/${account}`, config)
 
-export const apiLetterList = (config?: AxiosRequestConfig) => $axios.get('/letter/list', config)
-export const apiLetterMylist = (config?: AxiosRequestConfig) => $axios.get('/token/letter/mylist', config)
+export const apiLetterList = (args: any, config?: AxiosRequestConfig) => $axios.post('/letter/list', args, config)
+export const apiLetterMylist = (args: any, config?: AxiosRequestConfig) => $axios.post('/token/letter/mylist', args, config)
+export const apiCreateLetter = (args: any, config?: AxiosRequestConfig) => $axios.post('/token/letter/create', args, config)

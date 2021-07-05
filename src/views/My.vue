@@ -162,64 +162,55 @@ export default defineComponent({
     function getDataList() {
       dataState.loading = true
       apiLetterMylist({
-        data: {
-          pageNo: dataState.pageNo,
-          pageSize: dataState.pageSize,
-          fields: {
-            user: userinfo.id,
-            type: 1
-          }
+        pageNo: dataState.pageNo,
+        pageSize: dataState.pageSize,
+        fields: {
+          user: userinfo.id,
+          type: 1
         }
       }).then((res: any) => {
-        console.log(res)
         dataState.loading = false
         if (res && res.length > 0) {
           dataState.pageNo++
-          dataState.list.push(...res)
+          dataState.list.push(...res.list)
         } else {
           dataState.finished = true
         }
       }).catch(() => {
         dataState.loading = false
+        dataState.finished = true
       })
     }
-
-    // function getDataList() {
-    //   setTimeout(() => {
-    //     for (let i = 0; i < 10; i++) {
-    //       dataState.list.push(dataState.list.length + 1)
-    //     }
-
-    //     // 加载状态结束
-    //     dataState.loading = false
-
-    //     // 数据全部加载完成
-    //     if (dataState.list.length >= 40) {
-    //       dataState.finished = true
-    //     }
-    //   }, 1000)
-    // }
 
     const replyState = reactive({
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      pageNo: 1,
+      pageSize: 10
     })
 
     function getReplyList() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          replyState.list.push(replyState.list.length + 1)
+      replyState.loading = true
+      apiLetterMylist({
+        pageNo: replyState.pageNo,
+        pageSize: replyState.pageSize,
+        fields: {
+          user: userinfo.id,
+          type: 0
         }
-
-        // 加载状态结束
+      }).then((res: any) => {
         replyState.loading = false
-
-        // 数据全部加载完成
-        if (replyState.list.length >= 40) {
+        if (res && res.length > 0) {
+          replyState.pageNo++
+          replyState.list.push(...res.list)
+        } else {
           replyState.finished = true
         }
-      }, 1000)
+      }).catch(() => {
+        replyState.loading = false
+        replyState.finished = true
+      })
     }
 
     return {

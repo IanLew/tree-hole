@@ -77,6 +77,7 @@
 import { defineComponent, ref, reactive } from 'vue'
 import { Toast } from 'vant'
 import BottomMenu from '../components/BottomMenu.vue'
+import { apiLetterList } from '../apis'
 
 export default defineComponent({
   name: 'home',
@@ -97,23 +98,29 @@ export default defineComponent({
     const dataState = reactive({
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      pageNo: 1,
+      pageSize: 10
     })
 
     function getDataList() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          dataState.list.push(dataState.list.length + 1)
-        }
-
-        // 加载状态结束
+      dataState.loading = true
+      apiLetterList({
+        pageNo: dataState.pageNo,
+        pageSize: dataState.pageSize,
+        fields: {}
+      }).then((res: any) => {
         dataState.loading = false
-
-        // 数据全部加载完成
-        if (dataState.list.length >= 40) {
+        if (res && res.length > 0) {
+          dataState.pageNo++
+          dataState.list.push(...res.list)
+        } else {
           dataState.finished = true
         }
-      }, 1000)
+      }).catch(() => {
+        dataState.loading = false
+        dataState.finished = true
+      })
     }
 
     return {
@@ -129,6 +136,7 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .home {
+  box-sizing: border-box;
   padding-bottom: 50px;
   min-height: 100vh;
 }
