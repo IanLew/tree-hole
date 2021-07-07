@@ -13,7 +13,7 @@
     @load="getnoticeList">
     <div v-for="item in noticeState.list" :key="item" class="notice">
       <van-image
-        src="https://img.yzcdn.cn/vant/cat.jpeg"
+        :src="item.cuser.avatar || ' '"
         round
         lazy-load
         fit="cover"
@@ -23,15 +23,21 @@
         </template>
       </van-image>
       <div class="info">
-        <p class="nickname">测试昵称</p>
+        <p class="nickname">{{ item.cuser.nickname || item.cuser.account }}</p>
         <p class="behavior">
-          <van-icon name="good-job-o" />
-          <span>+1</span>
+          <template v-if="item.action === 2">
+            <van-icon name="share-o" />
+            <span>+1</span>
+          </template>
+          <template v-else>
+            <van-icon name="good-job-o" />
+            <span>+1</span>
+          </template>
         </p>
-        <p class="date">2021/06/23</p>
+        <p class="date">{{ item._updatedAt }}</p>
       </div>
       <div class="message">
-        <span>测试消息测试消息测试消息测试消息测试消息测试消息测试消息测试消息测试消息测试消息测试消息测试消息</span>
+        <span>{{ item.letter.content }}</span>
       </div>
     </div>
   </van-list>
@@ -39,31 +45,47 @@
 </template>
 
 <script lang="ts">
+import dayjs from 'dayjs'
 import { defineComponent, reactive } from 'vue'
+import { useStore } from 'vuex'
+import { apiLetterlogList } from '../../apis'
 
 export default defineComponent({
   name: 'my-notice',
   setup() {
+    const store = useStore()
+    const userinfo = store.getters.userinfo
+
     const noticeState = reactive({
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      pageNo: 1,
+      pageSize: 10
     })
 
     function getnoticeList() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          noticeState.list.push(noticeState.list.length + 1)
+      noticeState.loading = true
+      apiLetterlogList({
+        pageNo: noticeState.pageNo,
+        pageSize: noticeState.pageSize,
+        fields: {
+          user: userinfo.id
         }
-
-        // 加载状态结束
+      }).then((res: any) => {
         noticeState.loading = false
-
-        // 数据全部加载完成
-        if (noticeState.list.length >= 40) {
-          noticeState.finished = true
+        if (res && res.list.length > 0) {
+          noticeState.pageNo++
+          noticeState.list.push(...res.list.map((v: any) => {
+            v._updatedAt = dayjs(v.updatedAt).format('YYYY/MM/DD')
+            return v
+          }))
         }
-      }, 1000)
+        noticeState.finished = res.pages === 0 || res.pageNo === res.pages
+      }).catch(() => {
+        noticeState.loading = false
+        noticeState.finished = true
+      })
     }
 
     return {

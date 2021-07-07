@@ -82,7 +82,7 @@ export default defineComponent({
     }]
     const messageForm = reactive({
       category: typeCols[0].label,
-      content: '123',
+      content: '',
       images: []
     })
 
@@ -118,7 +118,7 @@ export default defineComponent({
       loading.value = true
       const category = typeCols.find(v => v.label === value.category)
       apiCreateLetter({
-        category,
+        category: category.value,
         content: value.content,
         images: value.images.length > 0 ? toRaw(value.images).join('|') : null,
         sender: userinfo.id

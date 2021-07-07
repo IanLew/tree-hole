@@ -7,13 +7,13 @@
       @load="getDataList">
       <router-link
         v-for="item in dataState.list"
-        :key="item"
-        :to="{name: 'letterDetail'}"
+        :key="item.id"
+        :to="{name: 'letterDetail', query: { id: item.id }}"
         class="msgdata">
         <section class="main">
           <div class="user">
             <van-image
-              src="https://img.yzcdn.cn/vant/cat.jpeg"
+              :src="item.cuser.avatar || ' '"
               round
               lazy-load
               fit="cover"
@@ -23,33 +23,40 @@
               </template>
             </van-image>
             <div class="user-info">
-              <p class="nickname">测试昵称</p>
+              <p class="nickname">
+                <span>{{ item.cuser.nickname || item.cuser.account }}</span>
+                <span>{{ item._updatedAt }}</span>
+              </p>
+              <p v-if="item.cuser.manifesto" class="group">{{ item.cuser.manifesto }}</p>
             </div>
           </div>
           <div class="content">
-            <div class="text">测试文本内容</div>
-            <van-image
-              src="https://img.yzcdn.cn/vant/cat.jpeg"
-              lazy-load
-              fit="contain"
-              class="simple-img">
-              <template v-slot:loading lazy-load>
-                <van-loading type="spinner" size="20" />
-              </template>
-            </van-image>
-            <div class="multi">
+            <div class="text">{{ item.content }}</div>
+            <template v-if="item.images.length > 0">
               <van-image
-                v-for="i in 9"
-                :key="i"
-                src="https://img.yzcdn.cn/vant/cat.jpeg"
+                v-if="item.images.length === 1"
+                :src="item.images[0] || ' '"
                 lazy-load
-                fit="cover"
-                class="multi-img">
+                fit="contain"
+                class="simple-img">
                 <template v-slot:loading lazy-load>
                   <van-loading type="spinner" size="20" />
                 </template>
               </van-image>
-            </div>
+              <div class="multi">
+                <van-image
+                  v-for="(v, i) in item.images"
+                  :key="i"
+                  :src="v || ' '"
+                  lazy-load
+                  fit="cover"
+                  class="multi-img">
+                  <template v-slot:loading lazy-load>
+                    <van-loading type="spinner" size="20" />
+                  </template>
+                </van-image>
+              </div>
+            </template>
           </div>
         </section>
         <section class="addition">
@@ -57,9 +64,9 @@
             type="default"
             size="mini"
             icon="share-o"
-            @click.prevent="() => (showShare = true)">分享</van-button>
-          <van-button type="default" size="mini" icon="chat-o">回复</van-button>
-          <van-button type="default" size="mini" icon="good-job-o">赞同</van-button>
+            @click.prevent="() => (showShare = true)">分享{{ item.shareTotal > 0 ? `(${item.shareTotal})` : '' }}</van-button>
+          <van-button type="default" size="mini" icon="chat-o">回复{{ item.replyTotal > 0 ? `(${item.replyTotal})` : '' }}</van-button>
+          <van-button type="default" size="mini" icon="good-job-o">赞同{{ item.mannerTotal > 0 ? `(${item.mannerTotal})` : '' }}</van-button>
         </section>
       </router-link>
     </van-list>
@@ -74,6 +81,7 @@
 </template>
 
 <script lang="ts">
+import dayjs from 'dayjs'
 import { defineComponent, ref, reactive } from 'vue'
 import { Toast } from 'vant'
 import BottomMenu from '../components/BottomMenu.vue'
@@ -111,12 +119,14 @@ export default defineComponent({
         fields: {}
       }).then((res: any) => {
         dataState.loading = false
-        if (res && res.length > 0) {
+        if (res && res.list.length > 0) {
           dataState.pageNo++
-          dataState.list.push(...res.list)
-        } else {
-          dataState.finished = true
+          dataState.list.push(...res.list.map((v: any) => {
+            v._updatedAt = dayjs(v.updatedAt).format('YYYY/MM/DD')
+            return v
+          }))
         }
+        dataState.finished = res.pages === 0 || res.pageNo === res.pages
       }).catch(() => {
         dataState.loading = false
         dataState.finished = true
@@ -181,6 +191,15 @@ export default defineComponent({
       }
       .nickname {
         color: #666;
+        display: flex;
+        justify-content: space-between;
+        span {
+          .ellipsis();
+          & + span {
+            flex-shrink: 0;
+            margin-left: 10px;
+          }
+        }
       }
       .group {
         color: #999;

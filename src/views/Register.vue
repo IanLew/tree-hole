@@ -101,7 +101,8 @@ export default defineComponent({
       loading.value = true
       apiRegister({
         account: value.account,
-        password: MD5(value.password).toString()
+        password: MD5(value.password).toString(),
+        identity: 1
       }).then(() => {
         loading.value = false
         Notify({

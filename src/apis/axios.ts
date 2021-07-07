@@ -23,7 +23,7 @@ function setCancelToken(config: AxiosRequestConfig) {
 function deleteCancelToken(config: AxiosRequestConfig) {
 	const url = [ config.method, config.url, qs.stringify(config.params), qs.stringify(config.data) ].join('&')
   if (cancelToken.has(url)) {
-    cancelToken.get(url).cancel()
+    cancelToken.get(url)()
 		cancelToken.delete(url)
   }
 }

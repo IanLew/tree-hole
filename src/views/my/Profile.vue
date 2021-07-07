@@ -15,6 +15,8 @@
             accept=".jpg,.jpeg,.png"
             :max-size="1 * 1024 * 1024"
             :beforeRead="onBeforeRead"
+            :max-count="1"
+            :after-read="onAfterRead"
             @oversize="onOversize" />
         </template>
       </van-field>
@@ -86,7 +88,7 @@ import { Notify } from 'vant'
 import { defineComponent, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import dayjs from 'dayjs'
-import { apiUpdateProfile } from '../../apis'
+import { apiUpdateProfile, apiUploadImage } from '../../apis'
 
 export default defineComponent({
   name: 'my-profile',
@@ -159,9 +161,7 @@ export default defineComponent({
       }
       for (const v of files) {
         const suffix = v.name.replace(/.*\.(\w+$)/g, '$1')
-        const isImage = ['jpg', 'jpeg', 'png'].includes(suffix)
-
-        if (!isImage) {
+        if (!['jpg', 'jpeg', 'png'].includes(suffix)) {
           Notify({
             type: 'danger',
             message: `不支持${suffix}格式`
@@ -171,6 +171,25 @@ export default defineComponent({
       }
 
       return true
+    }
+
+    function onAfterRead(file: any) {
+      file.status = 'uploading'
+      file.message = '上传中...'
+      const formData = new FormData()
+      formData.append('image', file.file)
+      apiUploadImage(formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(res => {
+        profileForm.avatar[0] = { url: res }
+        file.status = 'done'
+        file.message = '上传成功'
+      }).catch(() => {
+        file.status = 'failed'
+        file.message = '上传失败'
+      })
     }
 
     function formatter(type: string, val: string) {
@@ -208,6 +227,7 @@ export default defineComponent({
       onSubmit,
       onOversize,
       onBeforeRead,
+      onAfterRead,
       formatter,
       formatBirthday
     }
