@@ -18,14 +18,20 @@ module.exports = sequelize.define('letterlog', {
     type: DataTypes.INTEGER,
     allowNull: false,
     field: 'action',
-    comment: '行为：0-否定 1-赞同 2-分享'
+    comment: '行为 0-否定 1-赞同 2-分享'
   },
-  operator: {
+  sender: {
     type: DataTypes.INTEGER,
-    allowNull: true,
-    field: 'operatorId',
-    comment: '操作人编码'
-  }
+    allowNull: false,
+    field: 'sender',
+    comment: '发送者编码'
+  },
+  receiver: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'receiver',
+    comment: '接收者编码'
+  },
 }, {
   freezeTableName: true,
   timestamps: true

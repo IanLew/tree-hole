@@ -3,9 +3,13 @@ const LetterController = require('../controller/letter')
 const LetterlogController = require('../controller/letterlog')
 const CuserController = require('../controller/cuser')
 
+const Upload = require('../common/upload')
+
 const router = new Router({
   prefix: '/api'
 })
+
+router.post('/token/upload/image', Upload.singleImage)
 
 router.post('/token/letter/create', LetterController.create)
 router.post('/letter/list', LetterController.list)
@@ -14,6 +18,7 @@ router.get('/letter/detail/:id', LetterController.detail)
 router.put('/letter/read/:id', LetterController.read)
 
 router.post('/letterlog/create', LetterlogController.create)
+router.post('/letterlog/list', LetterlogController.list)
 
 router.post('/cuser/register', CuserController.create)
 router.post('/cuser/login', CuserController.login)

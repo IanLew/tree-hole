@@ -8,6 +8,12 @@ module.exports = sequelize.define('cuser', {
     allowNull: false,
     autoIncrement: true
   },
+  identity: {
+    type: DataTypes.INTEGER(1),
+    allowNull: false,
+    field: 'identity',
+    comment: '角色身份 0-系统 1-用户'
+  },
   account: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -36,7 +42,7 @@ module.exports = sequelize.define('cuser', {
     type: DataTypes.INTEGER(1),
     allowNull: true,
     field: 'sex',
-    comment: '性别'
+    comment: '性别 0-女 1-男 3-保密'
   },
   birthday: {
     type: DataTypes.STRING,

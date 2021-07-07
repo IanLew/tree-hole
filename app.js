@@ -1,19 +1,24 @@
 const Koa = require('koa')
 const body = require('koa-body')
 const morgan = require('koa-morgan')
+const static = require('koa-static')
 const cors = require('@koa/cors')
 const jwt = require('koa-jwt')
+const path = require('path')
 
 const router = require('./routes')
 
 const app = new Koa()
 
-app.use(body())
-
+app.use(body({
+  multipart: true,
+  formidable: {
+    maxFileSize: 1 * 1024 * 1024
+  }
+}))
 app.use(morgan('dev'))
-
+app.use(static(path.join(__dirname, './uploads')))
 app.use(cors())
-
 app.use(async (ctx, next) => {
   try {
     await next()

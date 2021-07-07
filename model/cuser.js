@@ -1,17 +1,29 @@
-const { Op, random } = require('sequelize')
+const { Op } = require('sequelize')
+const sequelize = require('../sequelize')
 const cuser = require('../schema/cuser')
 const letter = require('../schema/letter')
+const letterlog = require('../schema/letterlog')
 
 cuser.hasMany(letter, {
   foreignKey: 'sender'
 })
-letter.belongsTo(cuser)
+letter.belongsTo(cuser, {
+  foreignKey: 'sender'
+})
+
+cuser.hasMany(letterlog, {
+  foreignKey: 'sender'
+})
+letterlog.belongsTo(cuser, {
+  foreignKey: 'sender'
+})
 
 class CuserModel {
   static async createCuser(data) {
     return await cuser.create({
       account: data.account,
-      password: data.password
+      password: data.password,
+      identity: data.identity
     })
   }
 
@@ -28,13 +40,15 @@ class CuserModel {
   }
   
   static async getUserRand(id) {
-    return await cuser.findOne({
-      // where: {
-      //   id: {
-      //     [Op.not]: id
-      //   }
-      // },
-      order: random()
+    return await cuser.findAll({
+      attributes: ['id'],
+      where: {
+        id: {
+          [Op.not]: id
+        }
+      },
+      order: sequelize.random(),
+      limit: 1
     })
   }
 
@@ -59,11 +73,23 @@ class CuserModel {
   }
 
   static async updateProfile(account, profile) {
-    return await cuser.update(profile, {
+    const user = await cuser.findOne({
+      attributes: {
+        exclude: ['password']
+      },
       where: {
         account
       }
     })
+    if (user) {
+      return await cuser.update(profile, {
+        where: {
+          account
+        }
+      })
+    } else {
+      return Promise.reject('account is not exsit')
+    }
   }
 }
 

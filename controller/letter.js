@@ -6,21 +6,35 @@ class LetterController {
     const req = ctx.request.body
     if ((req.category || req.replyId) && req.content && req.sender) {
       try {
+        if (Array.isArray(req.images)) {
+          req.images = req.images.join('|')
+        }
         if (req.replyId) {
           await LetterModel.createLetter(req)
+          ctx.body = {
+            code: 200,
+            message: '创建成功',
+            data: null
+          }
         } else {
           const user = await CuserModel.getUserRand(req.sender)
-          console.log(user)
-          await LetterModel.createLetter(req)
-        }
-        
-        ctx.body = {
-          code: 200,
-          message: '创建成功',
-          data: null
+          if (user && user.length > 0) {
+            req.receiver = user[0].id
+            await LetterModel.createLetter(req)
+            ctx.body = {
+              code: 200,
+              message: '创建成功',
+              data: null
+            }
+          } else {
+            ctx.body = {
+              code: 412,
+              message: '创建失败',
+              data: null
+            }
+          }
         }
       } catch(err) {
-        console.log(err)
         ctx.body = {
           code: 412,
           message: '创建失败',
@@ -41,6 +55,7 @@ class LetterController {
     if (id) {
       try {
         const res = await LetterModel.getLetterById(id)
+        res.images = res.images ? res.images.split('|') : []
         ctx.body = {
           code: 200,
           message: '查询成功',
@@ -80,7 +95,10 @@ class LetterController {
           pageSize,
           pages: Math.ceil(res.count / pageSize),
           total: res.count,
-          list: res.rows
+          list: res.rows.map(v => {
+            v.images = v.images ? v.images.split('|') : []
+            return v
+          })
         }
       }
     } catch(err) {
@@ -102,7 +120,7 @@ class LetterController {
           offset: (pageNo - 1) * pageNo,
           limit: pageSize,
           user: fields.user,
-          type: fields.type || 1
+          type: fields.type || 0
         })
         ctx.body = {
           code: 200,
@@ -112,7 +130,10 @@ class LetterController {
             pageSize,
             pages: Math.ceil(res.count / pageSize),
             total: res.count,
-            list: res.rows
+            list: res.rows.map(v => {
+              v.images = v.images ? v.images.split('|') : []
+              return v
+            })
           }
         }
       } catch(err) {

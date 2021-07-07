@@ -103,7 +103,7 @@ class CuserController {
     const req = ctx.request.body
     if (req && req.account && req.password) {
       try {
-        await CuserModel.updateProfile(req.account, {
+        const res = await CuserModel.updateProfile(req.account, {
           password: req.password
         })
         ctx.body = {
@@ -114,7 +114,7 @@ class CuserController {
       } catch(err) {
         ctx.body = {
           code: 412,
-          message: '密码修改失败',
+          message: err === 'account is not exsit' ? '账号不存在' : '密码修改失败',
           data: null
         }
       }
@@ -141,7 +141,6 @@ class CuserController {
           data: res
         }
       } catch(err) {
-        console.log(err)
         ctx.body = {
           code: 412,
           message: '资料更新失败',
