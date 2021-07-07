@@ -10,7 +10,7 @@
     <section class="main">
       <div class="user">
         <van-image
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="letter.cuser.avatar || ' '"
           round
           lazy-load
           fit="cover"
@@ -20,44 +20,56 @@
           </template>
         </van-image>
         <div class="user-info">
-          <p class="nickname">测试昵称</p>
+          <p class="nickname">
+            <span>{{ letter.cuser.nickname || letter.cuser.account }}</span>
+            <span>{{ letter._updatedAt }}</span>
+          </p>
+          <p v-if="letter.cuser.manifesto" class="group">{{ letter.cuser.manifesto }}</p>
         </div>
       </div>
       <div class="content">
-        <div class="text">测试文本内容</div>
-        <van-image
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
-          lazy-load
-          fit="contain"
-          class="simple-img">
-          <template v-slot:loading lazy-load>
-            <van-loading type="spinner" size="20" />
-          </template>
-        </van-image>
-        <div class="multi">
+        <div class="text">{{ letter.content }}</div>
+        <template v-if="letter.images.length > 0">
           <van-image
-            v-for="i in 9"
-            :key="i"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            v-if="letter.images.length === 1"
+            :src="letter.images[0] || ' '"
             lazy-load
-            fit="cover"
-            class="multi-img">
+            fit="contain"
+            class="simple-img">
             <template v-slot:loading lazy-load>
               <van-loading type="spinner" size="20" />
             </template>
           </van-image>
-        </div>
+          <div class="multi">
+            <van-image
+              v-for="(v, i) in letter.images"
+              :key="i"
+              :src="v"
+              lazy-load
+              fit="cover"
+              class="multi-img">
+              <template v-slot:loading lazy-load>
+                <van-loading type="spinner" size="20" />
+              </template>
+            </van-image>
+          </div>
+        </template>
       </div>
     </section>
     <section class="addition">
-      <van-button type="default" size="mini" icon="share-o">0</van-button>
-      <van-button type="default" size="mini" icon="chat-o">0</van-button>
-      <van-button type="default" size="mini" icon="good-job-o">0</van-button>
+      <van-button
+        type="default"
+        size="mini"
+        icon="share-o"
+        @click.prevent="() => (showShare = true)">分享{{ letter.shareTotal > 0 ? `(${letter.shareTotal})` : '' }}</van-button>
+      <van-button type="default" size="mini" icon="chat-o">回复{{ letter.replyTotal > 0 ? `(${letter.replyTotal})` : '' }}</van-button>
+      <van-button type="default" size="mini" icon="good-job-o">赞同{{ letter.mannerTotal > 0 ? `(${letter.mannerTotal})` : '' }}</van-button>
     </section>
   </div>
-  <div class="dialogue">
+  <div class="dialogue" :style="{paddingBottom: userinfo.id && userinfo.id === letter.receiver ? '' : '0px'}">
     <div class="title">
-      <h4><van-icon name="chat-o" /> 回复</h4>
+      <h4>
+        <van-icon name="chat-o" /> 回复</h4>
     </div>
     <van-list
       v-model:loading="replyState.loading"
@@ -66,7 +78,7 @@
       @load="getReplyList">
       <div v-for="item in replyState.list" :key="item" class="reply">
         <van-image
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="item.cuser.avatar || ' '"
           round
           lazy-load
           fit="cover"
@@ -77,55 +89,117 @@
         </van-image>
         <div class="content">
           <div class="info">
-            <div class="nickname">测试昵称</div>
-            <div class="date">2021/06/23</div>
+            <div class="nickname">{{ item.cuser.nickname || item.cuser.account }}</div>
+            <div class="date">{{ item._updatedAt }}</div>
           </div>
-          <div class="message">测试消息测试消息测试消息测试消息测试消息测试消息测试消息测试消息测试消息测试消息测试消息测试消息</div>
+          <div class="message">{{ item.content }}</div>
         </div>
       </div>
     </van-list>
     <van-empty v-if="replyState.finished && replyState.list.length === 0" description="暂无数据" />
   </div>
-  <div class="send-rep">
-    <van-field v-model="replyContent" placeholder="请输入回复内容" />
-    <van-button type="primary">回复</van-button>
+  <div v-if="userinfo.id && userinfo.id === letter.receiver" class="send-rep">
+    <van-field v-model.trim="replyContent" placeholder="请输入回复内容" />
+    <van-button type="primary" @click="onSubmit">回复</van-button>
   </div>
 </template>
 
 <script lang="ts">
+import dayjs from 'dayjs'
 import { defineComponent, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { Notify } from 'vant'
+import { apiLetterDetail, apiLetterList, apiCreateLetter } from '../../apis'
 
 export default defineComponent({
   name: 'message-detail',
   setup() {
+    const route = useRoute()
+    const store = useStore()
+    const userinfo = store.getters.userinfo
+
+    const letter: any = ref({
+      cuser: {},
+      images: []
+    })
+    const loading = ref(true)
+
+    apiLetterDetail(Number(route.query.id)).then((res: any) => {
+      loading.value = false
+      res._updatedAt = dayjs(res.updatedAt).format('YYYY/MM/DD')
+      letter.value = res
+    }).catch(() => {
+      loading.value = false
+    })
+
     const replyState = reactive({
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      pageNo: 1,
+      pageSize: 10
     })
 
     function getReplyList() {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          replyState.list.push(replyState.list.length + 1)
+      replyState.loading = true
+      apiLetterList({
+        pageNo: replyState.pageNo,
+        pageSize: replyState.pageSize,
+        fields: {
+          replyId: Number(route.query.id)
         }
-
-        // 加载状态结束
+      }).then((res: any) => {
         replyState.loading = false
-
-        // 数据全部加载完成
-        if (replyState.list.length >= 40) {
-          replyState.finished = true
+        if (res && res.list.length > 0) {
+          replyState.pageNo++
+          replyState.list.push(...res.list.map((v: any) => {
+            v._updatedAt = dayjs(v.updatedAt).format('YYYY/MM/DD')
+            return v
+          }))
         }
-      }, 1000)
+        replyState.finished = res.pages === 0 || res.pageNo === res.pages
+      }).catch(() => {
+        replyState.loading = false
+        replyState.finished = true
+      })
     }
 
-    const replyContent = ref()
+    const replyContent = ref(null)
+
+    function onSubmit() {
+      if (replyContent.value) {
+        loading.value = true
+        apiCreateLetter({
+          replyId: Number(route.query.id),
+          category: letter.value.category,
+          content: replyContent.value,
+          sender: userinfo.id,
+          receiver: letter.value.sender
+        }).then(() => {
+          loading.value = false
+          Notify({
+            type: 'success',
+            message: '提交成功'
+          })
+        }).catch(() => {
+          loading.value = false
+        })
+      } else {
+        Notify({
+          type: 'danger',
+          message: '请输入回复内容'
+        })
+      }
+    }
 
     return {
+      userinfo,
+      letter,
       replyState,
       replyContent,
-      getReplyList
+      getReplyList,
+      onSubmit
     }
   }
 })
@@ -173,6 +247,15 @@ export default defineComponent({
       }
       .nickname {
         color: #666;
+        display: flex;
+        justify-content: space-between;
+        span {
+          .ellipsis();
+          & + span {
+            flex-shrink: 0;
+            margin-left: 10px;
+          }
+        }
       }
       .group {
         color: #999;
@@ -222,7 +305,7 @@ export default defineComponent({
   padding-bottom: 45px;
   .title {
     border-bottom: 1px solid #eee;
-    & > h4 {
+    &>h4 {
       color: #222;
       font-size: 16px;
       margin: 12px 16px;
