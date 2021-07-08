@@ -50,7 +50,7 @@ mysql v8.0.25.0
 - letterlog：信笺操作表，分享和发表态度数据
 
 ### 表结构
-所有表默认生成createdAt和updatedAt字段
+所有表默认生成createdAt和updatedAt字段<br>
 **cuser**
 
 | 字段名    | 是否允许为null | 字段类型     | 字段描述               |
