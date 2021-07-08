@@ -1,7 +1,14 @@
 const LetterModel = require('../model/letter')
 const CuserModel = require('../model/cuser')
 
+/**
+ * 信笺控制器
+ */
 class LetterController {
+  /**
+   * 创建信笺
+   * 必传字段：(category(创建时必传) | replyId(回复时必传)) | content | sender
+   */
   static async create(ctx) {
     const req = ctx.request.body
     if ((req.category || req.replyId) && req.content && req.sender) {
@@ -10,6 +17,7 @@ class LetterController {
           req.images = req.images.join('|')
         }
         if (req.replyId) {
+          // 创建回复
           await LetterModel.createLetter(req)
           ctx.body = {
             code: 200,
@@ -17,9 +25,11 @@ class LetterController {
             data: null
           }
         } else {
+          // 获取随机回复者
           const user = await CuserModel.getUserRand(req.sender)
           if (user && user.length > 0) {
             req.receiver = user[0].id
+            // 创建信笺
             await LetterModel.createLetter(req)
             ctx.body = {
               code: 200,
@@ -35,6 +45,7 @@ class LetterController {
           }
         }
       } catch(err) {
+        console.log(err)
         ctx.body = {
           code: 412,
           message: '创建失败',
@@ -50,6 +61,10 @@ class LetterController {
     }
   }
 
+  /**
+   * 获取信笺相关
+   * 必传字段：id
+   */
   static async detail(ctx) {
     const id = ctx.params.id
     if (id) {
@@ -77,6 +92,10 @@ class LetterController {
     }
   }
 
+  /**
+   * 获取信笺/回复列表
+   * 可选字段：replyId(回复必传)
+   */
   static async list(ctx) {
     let { pageNo, pageSize, fields } = ctx.request.body
     pageNo = pageNo || 1
@@ -110,6 +129,10 @@ class LetterController {
     }
   }
 
+  /**
+   * 获取我的信笺/回复列表
+   * 必传参数：user(用户id)
+   */
   static async mylist(ctx) {
     let { pageNo, pageSize, fields } = ctx.request.body
     pageNo = pageNo || 1
@@ -152,6 +175,10 @@ class LetterController {
     }
   }
 
+  /**
+   * 更新信笺阅读状态
+   * 必传参数：ids(信笺id)
+   */
   static async read(ctx) {
     const ids = ctx.request.body
     if (ids) {

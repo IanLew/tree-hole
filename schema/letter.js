@@ -12,7 +12,7 @@ module.exports = sequelize.define('letter', {
     type: DataTypes.INTEGER,
     allowNull: true,
     field: 'category',
-    comment: '类型：1-树洞'
+    comment: '类型 1-树洞'
   },
   replyId: {
     type: DataTypes.INTEGER,
@@ -21,13 +21,13 @@ module.exports = sequelize.define('letter', {
     comment: '回复信笺id'
   },
   content: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(1024),
     allowNull: false,
     field: 'content',
     comment: '内容'
   },
   images: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(1024),
     allowNull: true,
     field: 'images',
     comment: '图片'
@@ -48,7 +48,7 @@ module.exports = sequelize.define('letter', {
     type: DataTypes.BOOLEAN,
     allowNull: true,
     field: 'read',
-    comment: '已读'
+    comment: '已读 1-已读 0-未读'
   }
 }, {
   freezeTableName: true,

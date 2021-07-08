@@ -8,6 +8,7 @@ const sequelize = new Sequelize({
 })
 sequelize.sync({ force: false })
 
+// 测试连接
 sequelize.authenticate().then(() => {
 	console.log('Connection has been established successfully.')
 }).catch(err => {

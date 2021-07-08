@@ -16,9 +16,16 @@ app.use(body({
     maxFileSize: 1 * 1024 * 1024
   }
 }))
+
 app.use(morgan('dev'))
+
+// 上传资源
 app.use(static(path.join(__dirname, './uploads')))
+
+// 跨域
 app.use(cors())
+
+// 错误拦截
 app.use(async (ctx, next) => {
   try {
     await next()
@@ -35,6 +42,7 @@ app.use(async (ctx, next) => {
   }
 })
 
+// 接口带token进行登录校验
 app.use(jwt({
   secret: 'tree-hole'
 }).unless({

@@ -10,7 +10,14 @@ letterlog.belongsTo(letter, {
   foreignKey: 'letterId'
 })
 
+/**
+ * 信笺模型
+ */
 class LetterModel {
+  /**
+   * 创建信笺
+   * 必须字段：category | replyId | content | images | sender | receiver | read
+   */
   static async createLetter(data) {
     return await letter.create({
       category: data.category,
@@ -23,6 +30,10 @@ class LetterModel {
     })
   }
 
+  /**
+   * 通过id获取信笺信息、发布者信息、信笺操作计数
+   * 条件字段：id
+   */
   static async getLetterById(id) {
     return await letter.findOne({
       attributes: {
@@ -42,6 +53,11 @@ class LetterModel {
     })
   }
 
+  /**
+   * 获取信笺列表、发布者信息、信笺操作计数
+   * replyId为null时获取发布者信笺列表，否则获取回复信笺列表
+   * 条件字段：replyId
+   */
   static async getLetters({ limit, offset, replyId }) {
     return await letter.findAndCountAll({
       attributes: {
@@ -64,8 +80,14 @@ class LetterModel {
     })
   }
 
+  /**
+   * 获取用户信笺列表
+   * type为truly时获取用户发布信笺列表、发布者信息、信笺操作计数，否则获取回复信笺列表、回复信息
+   * 条件字段：type为truly时sender，否则receiver
+   */
   static async getLettersByUser({ limit, offset, user, type }) {
     if (type) {
+      // 查找发布信笺
       return await letter.findAndCountAll({
         attributes: {
           exclude: ['receiver', 'read'],
@@ -87,6 +109,7 @@ class LetterModel {
         offset
       })
     } else {
+      // 查找回复信笺
       return await letter.findAndCountAll({
         attributes: {
           exclude: ['receiver', 'read'],
@@ -108,6 +131,11 @@ class LetterModel {
     }
   }
 
+  /**
+   * 更新是否阅读
+   * 参数ids为数组时进行批量修改，字符串时进行单个修改
+   * 条件字段：id
+   */
   static async updateRead(ids) {
     if (Array.isArray(ids)) {
       return await letter.bulkCreate(ids.map(v => {

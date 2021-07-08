@@ -1,7 +1,14 @@
 const jsonwebtoken = require('jsonwebtoken')
 const CuserModel = require('../model/cuser')
 
+/**
+ * 用户控制器
+ */
 class CuserController {
+  /**
+   * 创建用户（注册）
+   * 必传字段：account | password
+   */
   static async create(ctx) {
     const req = ctx.request.body
     if (req.account && req.password) {
@@ -37,15 +44,20 @@ class CuserController {
     }
   }
 
+  /**
+   * 登录，返回用户信息、登录token
+   * 必传字段：account | password
+   */
   static async login(ctx) {
     const req = ctx.request.body
     try {
       const res = await CuserModel.getUser(req)
       if (res) {
+        // 生成token
         const token = jsonwebtoken.sign({
           id: res.id,
           account: req.account,
-          password: req.jsonwebtoken
+          password: req.password
         }, 'tree-hole', {
           expiresIn: '7d'
         })
@@ -73,6 +85,10 @@ class CuserController {
     }
   }
 
+  /**
+   * 获取用户信息，返回用户信息
+   * 必传字段：account
+   */
   static async profile(ctx) {
     const account = ctx.params.account
     if (account) {
@@ -99,6 +115,10 @@ class CuserController {
     }
   }
 
+  /**
+   * 修改密码
+   * 必传字段：account | password
+   */
   static async password(ctx) {
     const req = ctx.request.body
     if (req && req.account && req.password) {
@@ -127,6 +147,10 @@ class CuserController {
     }
   }
 
+  /**
+   * 修改用户信息，返回修改后用户信息
+   * 必传字段：account
+   */
   static async update(ctx) {
     const req = ctx.request.body
     if (req && req.account) {
@@ -137,13 +161,13 @@ class CuserController {
         const res = await CuserModel.getProfileByAccount(account)
         ctx.body = {
           code: 200,
-          message: '资料更新成功',
+          message: '信息更新成功',
           data: res
         }
       } catch(err) {
         ctx.body = {
           code: 412,
-          message: '资料更新失败',
+          message: '信息更新失败',
           data: null
         }
       }

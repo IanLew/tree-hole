@@ -3,7 +3,13 @@ const fs = require('fs')
 const fsPromises = require('fs/promises')
 const shortUuid = require('short-uuid')
 
+/**
+ * 上传
+ */
 class Upload {
+  /** 
+   * 单个上传图片，返回图片地址
+   */
   static async singleImage(ctx) {
     const file = ctx.request.files.image
     const suffix = file.name.replace(/.*\.(\w+$)/g, '$1')

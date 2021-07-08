@@ -26,5 +26,8 @@
   "devDependencies": {
     "nodemon": "^2.0.9",
     "pm2": "^5.1.0"
+  },
+  "engines": {
+    "node": ">= v14.16.0"
   }
 }

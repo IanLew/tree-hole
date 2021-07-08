@@ -1,3 +1,6 @@
+/**
+ * sequelize配置项
+ */
 module.exports = {
   dev: {
     database: 'tree-hole',

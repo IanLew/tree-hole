@@ -1,9 +1,16 @@
 const LetterlogModel = require('../model/letterlog')
 
+/**
+ * 信笺行为记录控制器
+ */
 class LetterlogController {
+  /**
+   * 创建记录
+   * 必传字段：letterId | action | sender | receiver
+   */
   static async create(ctx) {
     const req = ctx.request.body
-    if (req.letterId && req.action && req.operator) {
+    if (req.letterId && req.action && req.sender && req.receiver) {
       try {
         await LetterlogModel.createLetterlog(req)
         ctx.body = {
@@ -27,6 +34,10 @@ class LetterlogController {
     }
   }
 
+  /**
+   * 获取记录列表
+   * 必传参数：user(用户id)
+   */
   static async list(ctx) {
     let { pageNo, pageSize, fields } = ctx.request.body
     pageNo = pageNo || 1
