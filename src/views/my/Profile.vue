@@ -14,8 +14,8 @@
             v-model="profileForm.avatar"
             accept=".jpg,.jpeg,.png"
             :max-size="1 * 1024 * 1024"
-            :beforeRead="onBeforeRead"
             :max-count="1"
+            :before-read="onBeforeRead"
             :after-read="onAfterRead"
             @oversize="onOversize" />
         </template>
@@ -94,16 +94,16 @@ export default defineComponent({
   name: 'my-profile',
   setup() {
     const store = useStore()
+    const userinfo: any = store.getters.userinfo  // 用户信息
 
-    const showSex = ref(false)
-    const sexCols = ['女', '男', '保密']
-    const showBirthday = ref(false)
-    const minDate = new Date(1900, 1, 1)
-    const maxDate = new Date()
-    const birthday = ref(maxDate)
-    const loading = ref(false)
-
-    const userinfo: any = store.getters.userinfo
+    const showSex = ref(false)  // 显示性别picker
+    const sexCols = ['女', '男', '保密']  // 性别picker配置
+    const showBirthday = ref(false)  // 显示生日picker
+    const minDate = new Date(1900, 1, 1)  // 生日picker最小值
+    const maxDate = new Date()  // 生日picker最大值
+    const birthday = ref(maxDate)  // 生日picker默认
+    const loading = ref(false)  // 加载状态
+    // 用户信息表单
     const profileForm = reactive({
       avatar: userinfo.avatar ? [{ url: userinfo.avatar }] : [],
       sex: userinfo.sex && userinfo.sex !== 0 ? sexCols[userinfo.sex] : null,
@@ -112,6 +112,9 @@ export default defineComponent({
       birthday: userinfo.birthday
     })
 
+    /**
+     * 提交修改信息
+     */
     function onSubmit(value: any) {
       let params: any = {
         account: userinfo.account
@@ -147,6 +150,9 @@ export default defineComponent({
       })
     }
 
+    /**
+     * 上传头像超出1M
+     */
     function onOversize() {
       Notify({
         type: 'danger',
@@ -154,6 +160,9 @@ export default defineComponent({
       })
     }
 
+    /**
+     * 上传头像前处理
+     */
     function onBeforeRead(file: any) {
       let files = file
       if (!Array.isArray(file)) {
@@ -169,10 +178,12 @@ export default defineComponent({
           return false
         }
       }
-
       return true
     }
 
+    /**
+     * 上传头像
+     */
     function onAfterRead(file: any) {
       file.status = 'uploading'
       file.message = '上传中...'
@@ -192,6 +203,9 @@ export default defineComponent({
       })
     }
 
+    /**
+     * 格式化日期picker
+     */
     function formatter(type: string, val: string) {
       if (type === 'year') {
         return val + '年'
@@ -205,6 +219,9 @@ export default defineComponent({
       return val
     }
 
+    /**
+     * 格式化生日显示/picker回显
+     */
     function formatBirthday(value: any) {
       if (value) {
         profileForm.birthday = dayjs(value).format('YYYY-MM-DD')

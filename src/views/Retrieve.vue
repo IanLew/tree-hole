@@ -63,14 +63,18 @@ export default defineComponent({
   setup() {
     const router = useRouter()
 
-    const loading = ref(false)
-    const retrieveRef = ref()
+    const loading = ref(false)  // 加载状态
+    const retrieveRef = ref()  // 找回密码表单ref
+    // 找回密码表单
     const retrieveForm = reactive({
       account: '',
       password: '',
       reEnter: ''
     })
 
+    /**
+     * 输入密码表单校验
+     */
     function validatePassword(value: any) {
       if (value) {
         if (value.length < 6) {
@@ -85,6 +89,9 @@ export default defineComponent({
       }
     }
 
+    /**
+     * 再次输入密码表单校验
+     */
     function validateReEnter(value: any) {
       if (value) {
         if (value === retrieveForm.password) {
@@ -97,6 +104,9 @@ export default defineComponent({
       }
     }
 
+    /**
+     * 找回密码
+     */
     function retrieve(v: any) {
       loading.value = true
       apiUpdatePwd({

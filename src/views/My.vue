@@ -165,16 +165,20 @@ export default defineComponent({
   setup() {
     const activeTab = ref(0)
     const store = useStore()
-    const userinfo = store.getters.userinfo
+    const userinfo = store.getters.userinfo  // 用户信息
 
+    // 信笺相关
     const dataState = reactive({
-      list: [],
-      loading: false,
-      finished: false,
-      pageNo: 1,
-      pageSize: 10
+      list: [],  // 信笺列表
+      loading: false,  // 加载状态
+      finished: false,  // 完成加载状态
+      pageNo: 1,  // 当前页
+      pageSize: 10  // 分页限制
     })
 
+    /**
+     * 获取信笺列表
+     */
     function getDataList() {
       dataState.loading = true
       apiLetterMylist({
@@ -200,14 +204,18 @@ export default defineComponent({
       })
     }
 
+    // 回复相关
     const replyState = reactive({
-      list: [],
-      loading: false,
-      finished: false,
-      pageNo: 1,
-      pageSize: 10
+      list: [],  // 回复列表
+      loading: false,  // 加载状态
+      finished: false,  // 完成加载状态
+      pageNo: 1,  // 当前页
+      pageSize: 10  // 分页限制
     })
 
+    /**
+     * 获取回复列表
+     */
     function getReplyList() {
       replyState.loading = true
       apiLetterMylist({
@@ -413,10 +421,19 @@ export default defineComponent({
       }
     }
     .multi {
-      display: grid;
-      grid-template-columns: repeat(3, 110px);
-      grid-template-rows: repeat(3, 110px);
-      grid-gap: 6px 6px;
+      .clearfix();
+      .multi-img {
+        width: 110px;
+        height: 110px;
+        float: left;
+        margin-left: 6px;
+        &:nth-child(n+4) {
+          margin-top: 6px;
+        }
+        &:nth-child(3n+1) {
+          margin-left: 0;
+        }
+      }
     }
   }
   .addition {

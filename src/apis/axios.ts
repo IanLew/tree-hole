@@ -9,8 +9,13 @@ const $axios = axios.create({
 	timeout: 10000
 })
 
+// cancel token存储
 const cancelToken = new Map()
 
+/**
+ * 存储cancel token
+ * @param config axios请求配置
+ */
 function setCancelToken(config: AxiosRequestConfig) {
 	const url = [ config.method, config.url, qs.stringify(config.params), qs.stringify(config.data) ].join('&')
   config.cancelToken = config.cancelToken || new axios.CancelToken(cancel => {
@@ -20,6 +25,10 @@ function setCancelToken(config: AxiosRequestConfig) {
 	})
 }
 
+/**
+ * 移除cancel token
+ * @param config axios请求配置
+ */
 function deleteCancelToken(config: AxiosRequestConfig) {
 	const url = [ config.method, config.url, qs.stringify(config.params), qs.stringify(config.data) ].join('&')
   if (cancelToken.has(url)) {
@@ -28,6 +37,9 @@ function deleteCancelToken(config: AxiosRequestConfig) {
   }
 }
 
+/**
+ * 清除所有cancel token
+ */
 export function clearCancelToken() {
   for(const cancel of cancelToken.values()) {
 		cancel()
@@ -35,6 +47,11 @@ export function clearCancelToken() {
 	cancelToken.clear()
 }
 
+/**
+ * http请求状态错误信息
+ * @param status http状态码
+ * @returns 错误提示信息
+ */
 function createError(status?: number) {
 	switch (status) {
 		case 0:
@@ -66,6 +83,10 @@ function createError(status?: number) {
 	}
 }
 
+/**
+ * 错误处理，401提示登录，其余提示错误信息
+ * @param error 错误数据
+ */
 function errorHandle(error: any) {
 	if (error.status === 401 || error.code === 401) {
 		Notify.clear()
@@ -89,6 +110,11 @@ function errorHandle(error: any) {
 	}
 }
 
+/**
+ * 处理正常响应数据处理错误
+ * @param response axios响应数据
+ * @returns 错误信息
+ */
 function misdataHandle(response: AxiosResponse) {
 	const err = {
 		status: response.status,
@@ -98,11 +124,17 @@ function misdataHandle(response: AxiosResponse) {
 		data: response.data && response.data.data
 	}
 
+	// 错误处理
 	errorHandle(err)
 
 	return err
 }
 
+/**
+ * 响应异常错误处理
+ * @param error axios异常错误数据
+ * @returns 错误信息
+ */
 function exceptionHandle(error: AxiosError) {
 	let err: any = {}
 
@@ -114,6 +146,7 @@ function exceptionHandle(error: AxiosError) {
 		err.message = error.message || createError()
 	}
 
+	// 非cancel token产生的错误处理
 	if (!axios.isCancel(error)) {
 		deleteCancelToken(error.config)
 		errorHandle(err)
@@ -122,10 +155,13 @@ function exceptionHandle(error: AxiosError) {
 	return Promise.reject(err)
 }
 
+// 请求拦截
 $axios.interceptors.request.use(function (config: AxiosRequestConfig) {
+	// 取消重复请求，设置新请求
 	deleteCancelToken(config)
 	setCancelToken(config)
 
+	// token
 	if (store.getters.token) {
 		config.headers.common['Authorization'] = `Bearer ${store.getters.token}`
 	}
@@ -133,6 +169,7 @@ $axios.interceptors.request.use(function (config: AxiosRequestConfig) {
 	return config
 }, exceptionHandle)
 
+// 响应拦截
 $axios.interceptors.response.use(function (response: AxiosResponse) {
 	deleteCancelToken(response.config)
 

@@ -119,12 +119,14 @@ export default defineComponent({
     const store = useStore()
     const userinfo = store.getters.userinfo
 
+    // 信笺信息
     const letter: any = ref({
       cuser: {},
       images: []
     })
-    const loading = ref(true)
+    const loading = ref(true)  // 加载状态
 
+    // 获取信笺详情
     apiLetterDetail(Number(route.query.id)).then((res: any) => {
       loading.value = false
       res._updatedAt = dayjs(res.updatedAt).format('YYYY/MM/DD')
@@ -133,14 +135,18 @@ export default defineComponent({
       loading.value = false
     })
 
+    // 回复相关
     const replyState = reactive({
-      list: [],
-      loading: false,
-      finished: false,
-      pageNo: 1,
-      pageSize: 10
+      list: [],  // 回复列表
+      loading: false,  // 加载状态
+      finished: false,  // 完成加载状态
+      pageNo: 1,  // 当前页
+      pageSize: 10  // 分页限制
     })
 
+    /**
+     * 获取回复列表
+     */
     function getReplyList() {
       replyState.loading = true
       apiLetterList({
@@ -165,8 +171,11 @@ export default defineComponent({
       })
     }
 
-    const replyContent = ref(null)
+    const replyContent = ref(null)  // 回复内容
 
+    /**
+     * 提交回复
+     */
     function onSubmit() {
       if (replyContent.value) {
         loading.value = true
@@ -282,10 +291,19 @@ export default defineComponent({
       }
     }
     .multi {
-      display: grid;
-      grid-template-columns: repeat(3, 110px);
-      grid-template-rows: repeat(3, 110px);
-      grid-gap: 6px 6px;
+      .clearfix();
+      .multi-img {
+        width: 110px;
+        height: 110px;
+        float: left;
+        margin-left: 6px;
+        &:nth-child(n+4) {
+          margin-top: 6px;
+        }
+        &:nth-child(3n+1) {
+          margin-left: 0;
+        }
+      }
     }
   }
   .addition {

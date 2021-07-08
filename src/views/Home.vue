@@ -64,9 +64,9 @@
             type="default"
             size="mini"
             icon="share-o"
-            @click.prevent="() => (showShare = true)">分享{{ item.shareTotal > 0 ? `(${item.shareTotal})` : '' }}</van-button>
+            @click.prevent="() => (checkedLetter = item, showShare = true)">分享{{ item.shareTotal > 0 ? `(${item.shareTotal})` : '' }}</van-button>
           <van-button type="default" size="mini" icon="chat-o">回复{{ item.replyTotal > 0 ? `(${item.replyTotal})` : '' }}</van-button>
-          <van-button type="default" size="mini" icon="good-job-o">赞同{{ item.mannerTotal > 0 ? `(${item.mannerTotal})` : '' }}</van-button>
+          <van-button type="default" size="mini" icon="good-job-o" @click.prevent="declareOneself(item)">赞同{{ item.mannerTotal > 0 ? `(${item.mannerTotal})` : '' }}</van-button>
         </section>
       </router-link>
     </van-list>
@@ -83,9 +83,10 @@
 <script lang="ts">
 import dayjs from 'dayjs'
 import { defineComponent, ref, reactive } from 'vue'
+import { useStore } from 'vuex'
 import { Toast } from 'vant'
 import BottomMenu from '../components/BottomMenu.vue'
-import { apiLetterList } from '../apis'
+import { apiLetterList, apiCreateLetterlog } from '../apis'
 
 export default defineComponent({
   name: 'home',
@@ -93,24 +94,55 @@ export default defineComponent({
     BottomMenu
   },
   setup() {
+    const store = useStore()
+    const userinfo = store.getters.userinfo  // 用户信息
+    // 分享配置
     const shareOpts = [
       { name: '微信', icon: 'wechat' },
       { name: '复制链接', icon: 'link' }
     ]
-    const showShare = ref(false)
+    const showShare = ref(false)  // 是否显示分享
+    const checkedLetter: any = ref({})  // 当前选中信笺
 
+    /**
+     * 分享项触发
+     */
     function onSelectShare() {
+      apiCreateLetterlog({
+        letterId: checkedLetter.value.id,
+        action: 2,
+        sender: userinfo.id,
+        receiver: checkedLetter.value.sender
+      }).then(() => {}).catch(() => {})
       Toast('功能建设中...')
     }
 
+    /**
+     * 点击赞同
+     */
+    function declareOneself(item: any) {
+      apiCreateLetterlog({
+        letterId: item.id,
+        action: 1,
+        sender: userinfo.id,
+        receiver: item.sender
+      }).then(() => {
+        Toast('已赞同他/她的看法')
+      }).catch(() => {})
+    }
+
+    // 信笺列表相关
     const dataState = reactive({
-      list: [],
-      loading: false,
-      finished: false,
-      pageNo: 1,
-      pageSize: 10
+      list: [],  // 信笺列表
+      loading: false,  // 加载状态
+      finished: false,  // 完成加载状态
+      pageNo: 1,  // 当前页
+      pageSize: 10  // 分页限制
     })
 
+    /**
+     * 获取信笺列表
+     */
     function getDataList() {
       dataState.loading = true
       apiLetterList({
@@ -134,10 +166,12 @@ export default defineComponent({
     }
 
     return {
+      checkedLetter,
       shareOpts,
       showShare,
       dataState,
       onSelectShare,
+      declareOneself,
       getDataList
     }
   }
@@ -225,11 +259,26 @@ export default defineComponent({
         object-position: 0 0;
       }
     }
-    .multi {
+    .multi-grid {
       display: grid;
       grid-template-columns: repeat(3, 110px);
       grid-template-rows: repeat(3, 110px);
       grid-gap: 6px 6px;
+    }
+    .multi {
+      .clearfix();
+      .multi-img {
+        width: 110px;
+        height: 110px;
+        float: left;
+        margin-left: 6px;
+        &:nth-child(n+4) {
+          margin-top: 6px;
+        }
+        &:nth-child(3n+1) {
+          margin-left: 0;
+        }
+      }
     }
   }
   .addition {

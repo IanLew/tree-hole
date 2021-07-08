@@ -1,27 +1,52 @@
-# Vue 3 + Typescript + Vite
+# Tree Hole H5
+《树洞》官网代码<br>
+开发环境：<br>
+vue v3.0.5<br>
+vite v2.3.8<br>
+vant v3.1.0<br>
+less v4.1.1<br>
+typescript v4.3.4<br>
+node v14.16.0
 
-This template should help get you started developing with Vue 3 and Typescript in Vite.
+## 目录结构
+- apis：axios二次封装及接口文件
+- assets：资源文件
+- components：公共组件
+- router：路由
+- store：vuex文件
+- views：视图组件
 
-## Recommended IDE Setup
+### axios封装
+axios响应拦截：<br>
+服务器返回code为200或headers为ms-excel时直接返回数据；否则，返回错误Promise，统一进行错误封装和提示，通常不需要处理<br>
+如需根据服务器返回的数据处理逻辑，可根据下面的数据结构进行判断：
+```javascript
+{
+  status: 200,  // http状态码
+  statusText: 'ok',  // http状态描述
+  code: 416,  // 服务器状态码
+  message: '缺少必要参数',  // 服务器状态信息
+  data: null  // 服务器数据
+}
+```
+如有其它的正常数据被拦击时，在响应拦截器中增加相关逻辑即可
 
-[VSCode](https://code.visualstudio.com/) + [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur). Make sure to enable `vetur.experimental.templateInterpolationService` in settings!
+## 项目运行
+```
+npm install
+```
 
-### If Using `<script setup>`
+### 开发环境运行
+```
+npm run dev
+```
 
-[`<script setup>`](https://github.com/vuejs/rfcs/pull/227) is a feature that is currently in RFC stage. To get proper IDE support for the syntax, use [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) instead of Vetur (and disable Vetur).
+### 打包预览运行
+```
+npm run serve
+```
 
-## Type Support For `.vue` Imports in TS
-
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can use the following:
-
-### If Using Volar
-
-Run `Volar: Switch TS Plugin on/off` from VSCode command palette.
-
-### If Using Vetur
-
-1. Install and add `@vuedx/typescript-plugin-vue` to the [plugins section](https://www.typescriptlang.org/tsconfig#plugins) in `tsconfig.json`
-2. Delete `src/shims-vue.d.ts` as it is no longer needed to provide module info to Typescript
-3. Open `src/main.ts` in VSCode
-4. Open the VSCode command palette
-5. Search and run "Select TypeScript version" -> "Use workspace version"
+### 打包编译
+```
+npm run build
+```

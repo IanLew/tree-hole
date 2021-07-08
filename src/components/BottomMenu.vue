@@ -4,8 +4,8 @@
     <van-tabbar-item icon="add-o" @click="() => (showCreate = true)">创建</van-tabbar-item>
     <van-tabbar-item icon="user-o" :to="{name: 'my'}">我的</van-tabbar-item>
   </van-tabbar>
-  <van-action-sheet v-model:show="showCreate" title="创建树洞">
-    <van-form @submit="onSubmit" class="create-message">
+  <van-action-sheet v-model:show="showCreate" title="创建树洞" @close="onCloseCreate">
+    <van-form ref="createRef" class="create-message" @submit="onSubmit">
       <van-cell-group inset :border="false">
         <van-field
           v-model="messageForm.category"
@@ -23,16 +23,17 @@
           name="content"
           type="textarea"
           placeholder="请输入内容"
+          maxlength="1024"
           :rules="[{ required: true, message: '请输入内容' }]" />
         <van-field name="images" :border="false">
           <template #input>
             <van-uploader
               v-model="messageForm.images"
               accept=".jpg,.jpeg,.png,.gif"
-              multiple
               :max-size="1 * 1024 * 1024"
               :max-count="9"
-              :beforeRead="onBeforeRead"
+              :before-read="onBeforeRead"
+              :after-read="onAfterRead"
               @oversize="onOversize" />
           </template>
         </van-field>
@@ -64,28 +65,34 @@
 import { defineComponent, reactive, ref, toRaw } from 'vue'
 import { useStore } from 'vuex'
 import { Notify } from 'vant'
-import { apiCreateLetter } from '../apis'
+import { apiCreateLetter, apiUploadImage } from '../apis'
 
 export default defineComponent({
   name: 'bottom-menu',
   setup() {
     const store = useStore()
-    const userinfo: any = store.getters.userinfo
+    const userinfo: any = store.getters.userinfo  // 用户信息
 
-    const loading = ref(false)
-    const activeMenu = ref(0)
-    const showCreate = ref(false)
-    const showCreateType = ref(false)
+    const loading = ref(false)  // 加载状态
+    const activeMenu = ref(0)  // 当前激活menu
+    const showCreate = ref(false)  // 显示创建
+    const showCreateType = ref(false)  // 显示创建类型
+    const createRef = ref()  // 创建表单ref
+    // 信笺类型
     const typeCols = [{
       label: '树洞',
       value: 1
     }]
+    // 信笺表单
     const messageForm = reactive({
       category: typeCols[0].label,
       content: '',
       images: []
     })
 
+    /**
+     * 上传图片超过1M
+     */
     function onOversize() {
       Notify({
         type: 'danger',
@@ -93,6 +100,9 @@ export default defineComponent({
       })
     }
 
+    /**
+     * 图片上传前检查
+     */
     function onBeforeRead(file: any) {
       let files = file
       if (!Array.isArray(file)) {
@@ -110,20 +120,49 @@ export default defineComponent({
           return false
         }
       }
-
       return true
     }
 
+    /**
+     * 上传图片
+     */
+    function onAfterRead(file: any) {
+      file.status = 'uploading'
+      file.message = '上传中...'
+      const formData = new FormData()
+      formData.append('image', file.file)
+      apiUploadImage(formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(res => {
+        messageForm.images[messageForm.images.length - 1] = { url: res }
+        file.status = 'done'
+        file.message = '上传成功'
+      }).catch(() => {
+        file.status = 'failed'
+        file.message = '上传失败'
+      })
+    }
+
+    /**
+     * 提交信笺
+     */
     function onSubmit(value: any) {
       loading.value = true
       const category = typeCols.find(v => v.label === value.category)
+      let images = null
+      if (value.images.length > 0) {
+        images = value.images.map((v: any) => (v.url))
+      }
       apiCreateLetter({
-        category: category.value,
+        category,
         content: value.content,
-        images: value.images.length > 0 ? toRaw(value.images).join('|') : null,
-        sender: userinfo.id
+        images,
+        sender: userinfo.value.id
       }).then(() => {
         loading.value = false
+        showCreate.value = false
         Notify({
           type: 'success',
           message: '提交成功'
@@ -133,15 +172,28 @@ export default defineComponent({
       })
     }
 
+    /**
+     * 关闭创建时清除校验和数据
+     */
+    function onCloseCreate() {
+      createRef.value.resetValidation()
+      messageForm.category = typeCols[0].label
+      messageForm.content = ''
+      messageForm.images = []
+    }
+
     return {
       activeMenu,
+      createRef,
       showCreate,
       showCreateType,
       typeCols,
       messageForm,
       onOversize,
       onBeforeRead,
-      onSubmit
+      onAfterRead,
+      onSubmit,
+      onCloseCreate
     }
   }
 })

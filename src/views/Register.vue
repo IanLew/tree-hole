@@ -63,14 +63,18 @@ export default defineComponent({
   setup() {
     const router = useRouter()
 
-    const loading = ref(false)
-    const registerRef = ref()
+    const loading = ref(false)  // 加载状态
+    const registerRef = ref()  // 注册表单ref
+    // 注册表单
     const registerForm = reactive({
       account: '',
       password: '',
       reEnter: ''
     })
 
+    /**
+     * 输入密码表单校验
+     */
     function validatePassword(value: any) {
       if (value) {
         if (value.length < 6) {
@@ -85,6 +89,9 @@ export default defineComponent({
       }
     }
 
+    /**
+     * 再次输入密码表单校验
+     */
     function validateReEnter(value: any) {
       if (value) {
         if (value === registerForm.password) {
@@ -97,6 +104,9 @@ export default defineComponent({
       }
     }
 
+    /**
+     * 注册
+     */
     function register(value: any) {
       loading.value = true
       apiRegister({

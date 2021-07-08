@@ -10,7 +10,7 @@
     v-model:loading="noticeState.loading"
     :finished="noticeState.finished"
     :finished-text="noticeState.list.length > 0 && noticeState.finished ? '—— 我们是有底线的 ——' : ''"
-    @load="getnoticeList">
+    @load="getNoticeList">
     <div v-for="item in noticeState.list" :key="item" class="notice">
       <van-image
         :src="item.cuser.avatar || ' '"
@@ -56,15 +56,19 @@ export default defineComponent({
     const store = useStore()
     const userinfo = store.getters.userinfo
 
+    // 消息相关
     const noticeState = reactive({
-      list: [],
-      loading: false,
-      finished: false,
-      pageNo: 1,
-      pageSize: 10
+      list: [],  // 消息列表
+      loading: false,  // 加载状态
+      finished: false,  // 完成加载状态
+      pageNo: 1,  // 当前页
+      pageSize: 10  // 分页限制
     })
 
-    function getnoticeList() {
+    /**
+     * 获取消息列表
+     */
+    function getNoticeList() {
       noticeState.loading = true
       apiLetterlogList({
         pageNo: noticeState.pageNo,
@@ -90,7 +94,7 @@ export default defineComponent({
 
     return {
       noticeState,
-      getnoticeList
+      getNoticeList
     }
   }
 })

@@ -57,13 +57,17 @@ export default defineComponent({
     const router = useRouter()
     const store = useStore()
 
-    const isRecord = ref(true)
-    const loading = ref(false)
+    const isRecord = ref(true)  // 是否记录密码（未实现）
+    const loading = ref(false)  // 加载状态
+    // 登录表单
     const loginForm = reactive({
       account: '',
       password: ''
     })
 
+    /**
+     * 登录
+     */
     function login(v: any) {
       loading.value = true
       apiLogin({
