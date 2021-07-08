@@ -51,7 +51,8 @@ mysql v8.0.25.0
 
 ### 表结构
 所有表默认生成createdAt和updatedAt字段
-- cuser
+**cuser**
+
 | 字段名    | 是否允许为null | 字段类型     | 字段描述               |
 | --------- | -------------- | ------------ | ---------------------- |
 | id        | false          | int          | 主键                   |
@@ -64,7 +65,8 @@ mysql v8.0.25.0
 | birthday  | true           | varchar(255) | 生日                   |
 | manifesto | true           | varchar(255) | 签名                   |
 
-- letter
+**letter**
+
 | 字段名   | 是否允许为null | 字段类型      | 字段描述           |
 | -------- | -------------- | ------------- | ------------------ |
 | id       | true           | int           | 主键               |
@@ -76,7 +78,8 @@ mysql v8.0.25.0
 | receiver | false          | int           | 接收者编码         |
 | read     | true           | tinyint(1)    | 已读 1-已读 0-未读 |
 
-- letterlog
+**letterlog**
+
 | 字段名   | 是否允许为null | 字段类型 | 字段描述                  |
 | -------- | -------------- | -------- | ------------------------- |
 | id       | false          | int      | 主键                      |
