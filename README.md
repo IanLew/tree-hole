@@ -4,6 +4,15 @@
 node v14.16.0<br>
 mysql v8.0.25.0
 
+## 目录结构
+- bin：服务器启动配置
+- common：公共接口
+- controller：数据交互控制器
+- model：数据模型
+- schema：数据表结构
+- sequelize：数据库sequelize配置
+- routes：路由
+
 ## 接口
 接口前缀`/api`<br>
 接口文档暂无（相关参考源码注释）
