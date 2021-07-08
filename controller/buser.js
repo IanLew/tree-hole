@@ -1,19 +1,19 @@
 const jsonwebtoken = require('jsonwebtoken')
-const CuserModel = require('../model/cuser')
+const BuserModel = require('../model/buser')
 
 /**
  * 用户控制器
  */
-class CuserController {
+class BuserController {
   /**
-   * 创建用户（注册）
+   * 创建用户
    * 必传字段：account | password
    */
   static async create(ctx) {
     const req = ctx.request.body
     if (req.account && req.password) {
       try {
-        const acc = await CuserModel.getProfileByAccount(req.account)
+        const acc = await BuserModel.getProfileByAccount(req.account)
         if (acc) {
           ctx.body = {
             code: 411,
@@ -21,7 +21,7 @@ class CuserController {
             data: null
           }
         } else {
-          await CuserModel.createCuser(req)
+          await BuserModel.createCuser(req)
           ctx.body = {
             code: 200,
             message: '创建成功',
@@ -51,7 +51,7 @@ class CuserController {
   static async login(ctx) {
     const req = ctx.request.body
     try {
-      const res = await CuserModel.getUser(req)
+      const res = await BuserModel.getUser(req)
       if (res) {
         // 生成token
         const token = jsonwebtoken.sign({
@@ -93,7 +93,7 @@ class CuserController {
     const account = ctx.params.account
     if (account) {
       try {
-        const res = await CuserModel.getProfileByAccount(account)
+        const res = await BuserModel.getProfileByAccount(account)
         ctx.body = {
           code: 200,
           message: '查询成功',
@@ -123,9 +123,9 @@ class CuserController {
     const req = ctx.request.body
     if (req && req.account && req.password) {
       try {
-        const acc = await CuserModel.getProfileByAccount(req.account)
+        const acc = await BuserModel.getProfileByAccount(req.account)
         if (acc) {
-          await CuserModel.updateProfile(req.account, {
+          await BuserModel.updateProfile(req.account, {
             password: req.password
           })
           ctx.body = {
@@ -166,8 +166,8 @@ class CuserController {
       try {
         const account = req.account
         delete req.account
-        await CuserModel.updateProfile(account, req)
-        const res = await CuserModel.getProfileByAccount(account)
+        await BuserModel.updateProfile(account, req)
+        const res = await BuserModel.getProfileByAccount(account)
         ctx.body = {
           code: 200,
           message: '信息更新成功',
@@ -190,4 +190,4 @@ class CuserController {
   }
 }
 
-module.exports = CuserController
+module.exports = BuserController

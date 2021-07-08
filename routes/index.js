@@ -1,7 +1,10 @@
 const Router = require('koa-router')
+
 const LetterController = require('../controller/letter')
 const LetterlogController = require('../controller/letterlog')
 const CuserController = require('../controller/cuser')
+
+const BuserController = require('../controller/Buser')
 
 const Upload = require('../common/upload')
 
@@ -20,10 +23,16 @@ router.put('/letter/read/:id', LetterController.read)  // 更新信笺阅读状�
 router.post('/letterlog/create', LetterlogController.create)  // 信笺行为记录创建
 router.post('/letterlog/list', LetterlogController.list)  // 分页获取信笺行为记录
 
-router.post('/cuser/register', CuserController.create)  // 注册
-router.post('/cuser/login', CuserController.login)  // 登录
-router.get('/token/cuser/profile/:account', CuserController.profile)  // 获取用户信息
-router.post('/token/cuser/update', CuserController.update)  // 更新用户信息
-router.post('/cuser/pwd', CuserController.password)  // 修改密码
+router.post('/cuser/register', CuserController.create)  // 官网注册
+router.post('/cuser/login', CuserController.login)  // 官网登录
+router.get('/token/cuser/profile/:account', CuserController.profile)  // 官网获取用户信息
+router.post('/token/cuser/update', CuserController.update)  // 官网更新用户信息
+router.post('/cuser/pwd', CuserController.password)  // 官网修改密码
+
+router.post('/token/buser/register', BuserController.create)  // 后台注册
+router.post('/buser/login', BuserController.login)  // 后台登录
+router.get('/token/buser/profile/:account', BuserController.profile)  // 后台获取用户信息
+router.post('/token/buser/update', BuserController.update)  // 后台更新用户信息
+router.post('/buser/pwd', BuserController.password)  // 后台修改密码
 
 module.exports = router

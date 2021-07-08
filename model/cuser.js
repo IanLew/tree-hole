@@ -68,19 +68,6 @@ class CuserModel {
   }
 
   /**
-   * 通过账号获取用户id
-   * 条件字段：account
-   */
-  static async getUserByAccount(account) {
-    return await cuser.findOne({
-      attributes: ['id'],
-      where: {
-        account
-      }
-    })
-  }
-
-  /**
    * 获取除密码外的用户信息
    * 条件字段：account
    */
@@ -96,28 +83,16 @@ class CuserModel {
   }
 
   /**
-   * 更新用户信息并返回除密码外的用户信息，账号不存在时抛错
+   * 更新用户信息并返回除密码外的用户信息
    * 条件字段：account
    * profile为新的用户信息
    */
   static async updateProfile(account, profile) {
-    const user = await cuser.findOne({
-      attributes: {
-        exclude: ['password']
-      },
+    return await cuser.update(profile, {
       where: {
         account
       }
     })
-    if (user) {
-      return await cuser.update(profile, {
-        where: {
-          account
-        }
-      })
-    } else {
-      return Promise.reject('account is not exsit')
-    }
   }
 }
 
