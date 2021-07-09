@@ -29,7 +29,10 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     router.push({
-      name: 'login'
+      name: 'login',
+      query: {
+        back: 1
+      }
     })
   }
 })

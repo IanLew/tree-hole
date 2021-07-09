@@ -2,7 +2,7 @@
   <div class="login">
     <div class="login-box">
       <h1>后台管理系统</h1>
-      <a-form :model="loginForm">
+      <a-form>
         <a-form-item>
           <a-input
             v-model:value="loginForm.account" 
@@ -28,13 +28,14 @@
           </a-input>
         </a-form-item>
         <a-form-item>
-          <a-checkbox v-model:checked="isRecordPwd">记住密码</a-checkbox>
+          <a-checkbox v-model:checked="isRecordPwd" disabled>记住密码</a-checkbox>
         </a-form-item>
         <a-form-item class="btns">
           <a-button
             type="primary"
             size="large"
             style="width: 100%;"
+            :loading="loading"
             @click="login"
             @pressEnter="login">登录</a-button>
         </a-form-item>
@@ -44,26 +45,62 @@
 </template>
 
 <script lang="ts">
+import { message, Form } from 'ant-design-vue'
 import { defineComponent, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { MD5 } from 'crypto-js'
+import { apiLogin } from '../apis'
 
 export default defineComponent({
   name: 'login',
   setup() {
+    const route = useRoute()
     const router = useRouter()
+    const store = useStore()
 
-    const isRecordPwd = ref(false)
+    const isRecordPwd = ref(true)  // 记住密码（未实现）
+    const loading = ref(false)  // 加载状态
+    // 登录表单
     const loginForm = reactive({
 			account: null,
 			password: null
 		})
+    // 表单校验
+    const rulesRef = reactive({
+      account: [{ required: true, message: '请输入账号' }],
+      password: [{ required: true, message: '请输入密码' }]
+    })
+    const { validate } = Form.useForm(loginForm, rulesRef)
 
-    // 登录
+    /**
+     * 登录
+     */
     function login() {
-      router.push({ name: 'home' })
+      validate().then(() => {
+        loading.value = true
+        apiLogin({
+          account: loginForm.account,
+          password: MD5(loginForm.password).toString()
+        }).then((res) => {
+          store.commit('user', res)
+          loading.value = false
+          message.success('登录成功')
+          if (route.query.back) {
+            router.go(-1)
+          } else {
+            router.replace({
+              name: 'home'
+            })
+          }
+        }).catch(() => {
+          loading.value = false
+        })
+      }).catch(() => {})
     }
 
     return {
+      loading,
       isRecordPwd,
       loginForm,
       login

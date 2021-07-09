@@ -43,7 +43,13 @@
           <a-col>
             <a-row type="flex" justify="center">
               <a-col>
-                <a-dropdown trigger="hover">
+                <a-avatar src="">
+                  <template #icon>
+                    <user-outlined />
+                  </template>
+                </a-avatar>
+                <span>{{ userinfo.nickname || userinfo.account }}</span>
+                <!-- <a-dropdown trigger="hover">
                   <template #overlay>
                     <a-menu model="inline" class="setting-menu">
                       <a-menu-item>
@@ -54,7 +60,7 @@
                         <setting-outlined />
                         <span>系统设置</span>
                       </a-menu-item>
-                      <a-menu-item>
+                      <a-menu-item @click="logout">
                         <export-outlined />
                         <span>退出登录</span>
                       </a-menu-item>
@@ -66,9 +72,13 @@
                         <user-outlined />
                       </template>
                     </a-avatar>
-                    <span>administrator</span>
+                    <span>{{ userinfo.nickname || userinfo.account }}</span>
                   </div>
-                </a-dropdown>
+                </a-dropdown> -->
+              </a-col>
+              <a-col @click="logout">
+                <export-outlined />
+                <span>退出登录</span>
               </a-col>
             </a-row>
           </a-col>
@@ -83,16 +93,37 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'home',
   setup() {
-    const isCollapsed = ref(false)
-    const selectedKeys = ref([])
+    const router = useRouter()
+    const store = useStore()
+    const userinfo = store.getters.userinfo
+
+    const isCollapsed = ref(false)  // 收缩侧边栏
+    const selectedKeys = ref([])  // 选中侧边栏菜单
+
+    /**
+     * 退出登录
+     */
+    function logout() {
+      store.commit('user', null)
+      router.push({
+        name: 'login',
+        query: {
+          back: 1
+        }
+      })
+    }
 
     return {
       isCollapsed,
-      selectedKeys
+      selectedKeys,
+      userinfo,
+      logout
     }
   }
 })
@@ -140,15 +171,28 @@ export default defineComponent({
   display: inline-block;
   vertical-align: middle;
 }
-.user {
-  &>span {
-    display: inline-block;
-    vertical-align: middle;
-  }
-  .ant-avatar+span {
-    max-width: 80px;
-    margin-left: 5px;
-    .ellipsis();
+// .user {
+//   &>span {
+//     display: inline-block;
+//     vertical-align: middle;
+//   }
+//   .ant-avatar+span {
+//     max-width: 80px;
+//     margin-left: 5px;
+//     .ellipsis();
+//   }
+// }
+:deep(.ant-layout-header) {
+  .ant-row {
+    .ant-row {
+      .ant-col {
+        span {
+          & + span {
+            margin-left: 5px;
+          }
+        }
+      }
+    }
   }
 }
 </style>
