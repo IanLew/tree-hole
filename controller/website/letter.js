@@ -1,5 +1,5 @@
-const LetterModel = require('../model/letter')
-const CuserModel = require('../model/cuser')
+const LetterModel = require('../../model/website/letter')
+const CuserModel = require('../../model/website/user')
 
 /**
  * 信笺控制器
@@ -200,6 +200,39 @@ class LetterController {
       ctx.body = {
         code: 416,
         message: '参数错误',
+        data: null
+      }
+    }
+  }
+
+  /**
+   * 获取所有信笺/回复列表
+   */
+  static async getAllLetters(ctx) {
+    let { pageNo, pageSize, fields } = ctx.request.body
+    pageNo = pageNo || 1
+    pageSize = pageSize || 10
+    try {
+      const res = await LetterModel.getAllLetters({
+        offset: (pageNo - 1) * pageNo,
+        limit: pageSize,
+        fields: fields || {}
+      })
+      ctx.body = {
+        code: 200,
+        message: '查询成功',
+        data: {
+          pageNo,
+          pageSize,
+          pages: Math.ceil(res.count / pageSize),
+          total: res.count,
+          list: res
+        }
+      }
+    } catch(err) {
+      ctx.body = {
+        code: 412,
+        message: '查询失败',
         data: null
       }
     }

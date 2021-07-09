@@ -1,4 +1,4 @@
-const buser = require('../schema/buser')
+const buser = require('../../schema/ms/user')
 
 /**
  * 后台用户模型
@@ -12,7 +12,7 @@ class BuserModel {
     return await buser.create({
       account: data.account,
       password: data.password,
-      group: data.group
+      authority: data.authority
     })
   }
 
@@ -57,6 +57,51 @@ class BuserModel {
       where: {
         account
       }
+    })
+  }
+  
+  /**
+   * 获取除用户权限数据
+   * 条件字段：account
+   */
+  static async getAuthority(account) {
+    return await buser.findOne({
+      attributes: ['authority'],
+      where: {
+        account
+      }
+    })
+  }
+
+  /**
+   * 更新用户权限数据
+   * 条件字段：account
+   * 必传字段：authority
+   */
+  static async updateAuthority(account, authority) {
+    return await buser.update({
+      authority
+    }, {
+      where: {
+        account
+      }
+    })
+  }
+
+  /**
+   * 查询所有用户
+   */
+  static async getUsers({ limit, offset, fields }) {
+    return await buser.findAndCountAll({
+      attributes: {
+        exclude: ['password']
+      },
+      where: {
+        account: fields.account,
+        nickname: data.nickname
+      },
+      limit,
+      offset
     })
   }
 }

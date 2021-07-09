@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize')
-const sequelize = require('../sequelize')
+const sequelize = require('../../sequelize')
 
 module.exports = sequelize.define('buser', {
   id: {
@@ -8,11 +8,11 @@ module.exports = sequelize.define('buser', {
     allowNull: false,
     autoIncrement: true
   },
-  group: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    field: 'group',
-    comment: '权限组'
+  authority: {
+    type: DataTypes.STRING(1024),
+    allowNull: true,
+    field: 'authority',
+    comment: '权限'
   },
   account: {
     type: DataTypes.STRING,

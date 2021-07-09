@@ -1,6 +1,6 @@
-const letterlog = require('../schema/letterlog')
-const letter = require('../schema/letter')
-const cuser = require('../schema/cuser')
+const letterlog = require('../../schema/website/letterlog')
+const letter = require('../../schema/website/letter')
+const cuser = require('../../schema/website/user')
 
 /**
  * 信笺行为记录模型
@@ -37,6 +37,26 @@ class LetterlogModel {
       ],
       where: {
         receiver: user
+      },
+      limit,
+      offset
+    })
+  }
+
+  /**
+   * 获取所有行为记录、信笺内容、操作人
+   * 条件字段：letterId | receiver | sender
+   */
+  static async getAllLetterlogs({ limit, offset, fields }) {
+    return await letterlog.findAndCountAll({
+      include: {
+        model: cuser,
+        attributes: ['avatar', 'nickname', 'account', 'manifesto']
+      },
+      where: {
+        letterId: fields.letterId,
+        receiver: fields.receiver,
+        sender: fields.sender
       },
       limit,
       offset

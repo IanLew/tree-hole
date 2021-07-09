@@ -1,8 +1,8 @@
 const { Op } = require('sequelize')
-const sequelize = require('../sequelize')
-const cuser = require('../schema/cuser')
-const letter = require('../schema/letter')
-const letterlog = require('../schema/letterlog')
+const sequelize = require('../../sequelize')
+const cuser = require('../../schema/website/user')
+const letter = require('../../schema/website/letter')
+const letterlog = require('../../schema/website/letterlog')
 
 cuser.hasMany(letter, {
   foreignKey: 'sender'
@@ -47,6 +47,23 @@ class CuserModel {
         account: data.account,
         password: data.password
       }
+    })
+  }
+
+  /**
+   * 查询所有用户
+   */
+  static async getUsers({ limit, offset, fields }) {
+    return await cuser.findAndCountAll({
+      attributes: {
+        exclude: ['password']
+      },
+      where: {
+        account: fields.account,
+        nickname: data.nickname
+      },
+      limit,
+      offset
     })
   }
   

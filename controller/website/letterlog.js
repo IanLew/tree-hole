@@ -1,4 +1,4 @@
-const LetterlogModel = require('../model/letterlog')
+const LetterlogModel = require('../../model/website/letterlog')
 
 /**
  * 信笺行为记录控制器
@@ -74,6 +74,33 @@ class LetterlogController {
       ctx.body = {
         code: 416,
         message: '缺少必要参数',
+        data: null
+      }
+    }
+  }
+
+  /**
+   * 获取行为记录列表
+   */
+  static async getAllLetterlogs(ctx) {
+    let { pageNo, pageSize, fields } = ctx.request.body
+    pageNo = pageNo || 1
+    pageSize = pageSize || 10
+    try {
+      const res = await LetterlogModel.getAllLetterlogs({
+        offset: (pageNo - 1) * pageNo,
+        limit: pageSize,
+        fields: fields || {}
+      })
+      ctx.body = {
+        code: 200,
+        message: '查询成功',
+        data: res
+      }
+    } catch(err) {
+      ctx.body = {
+        code: 412,
+        message: '查询失败',
         data: null
       }
     }

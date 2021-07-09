@@ -1,7 +1,7 @@
-const sequelize = require('../sequelize')
-const letter = require('../schema/letter')
-const letterlog = require('../schema/letterlog')
-const cuser = require('../schema/cuser')
+const sequelize = require('../../sequelize')
+const letter = require('../../schema/website/letter')
+const letterlog = require('../../schema/website/letterlog')
+const cuser = require('../../schema/website/user')
 
 letter.hasMany(letterlog, {
   foreignKey: 'letterId'
@@ -133,17 +133,20 @@ class LetterModel {
 
   /**
    * 更新是否阅读
-   * 参数ids为数组时进行批量修改，字符串时进行单个修改
+   * 参数ids为数组时进行批量修改，否则进行单个修改
    * 条件字段：id
    */
   static async updateRead(ids) {
     if (Array.isArray(ids)) {
       return await letter.bulkCreate(ids.map(v => {
         return {
-          id: v
+          id: v,
+          read: true
         }
+      }, {
+        updateOnDuplicate: ['read']
       }))
-    } else if (typeof ids === 'string') {
+    } else {
       return await letter.update({
         read: true
       }, {
@@ -152,6 +155,32 @@ class LetterModel {
         }
       })
     }
+  }
+
+  /**
+   * 获取信笺列表、发布者信息、信笺操作计数
+   * 条件字段：receiver | sender
+   */
+  static async getAllLetters({ limit, offset, fields }) {
+    return await letter.findAndCountAll({
+      attributes: {
+        include: [
+          [sequelize.literal(`(SELECT COUNT(*) FROM letterlog WHERE letterid = letter.id AND action = 2)`), 'shareTotal'],
+          [sequelize.literal(`(SELECT COUNT(*) FROM letterlog WHERE letterid = letter.id AND (action = 0 OR action = 1))`), 'mannerTotal'],
+          [sequelize.literal(`(SELECT COUNT(*) FROM letter as a WHERE a.replyId = letter.id)`), 'replyTotal']
+        ]
+      },
+      include: {
+        model: cuser,
+        attributes: ['avatar', 'nickname', 'account', 'manifesto']
+      },
+      where: {
+        receiver: fields.receiver,
+        sender: fields.sender
+      },
+      limit,
+      offset
+    })
   }
 }
 
