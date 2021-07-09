@@ -82,7 +82,7 @@
                     <van-loading type="spinner" size="20" />
                   </template>
                 </van-image>
-                <div class="multi">
+                <div v-else class="multi">
                   <van-image
                     v-for="(v, i) in item.images"
                     :key="i"
@@ -166,6 +166,7 @@ export default defineComponent({
     const activeTab = ref(0)
     const store = useStore()
     const userinfo = store.getters.userinfo  // 用户信息
+    console.log(userinfo)
 
     // 信笺相关
     const dataState = reactive({

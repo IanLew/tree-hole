@@ -153,13 +153,13 @@ export default defineComponent({
       const category = typeCols.find(v => v.label === value.category)
       let images = null
       if (value.images.length > 0) {
-        images = value.images.map((v: any) => (v.url))
+        images = value.images.map((v: any) => v.url)
       }
       apiCreateLetter({
-        category,
+        category: category.value,
         content: value.content,
         images,
-        sender: userinfo.value.id
+        sender: userinfo.id
       }).then(() => {
         loading.value = false
         showCreate.value = false

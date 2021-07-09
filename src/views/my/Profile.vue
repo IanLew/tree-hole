@@ -136,7 +136,7 @@ export default defineComponent({
         store.commit('user', Object.assign(store.state.user, {
           userinfo: res
         }))
-        const user: any = res || {}
+        const user: any = res ? {...res} : {}
         user.avatar = user.avatar ? [{ url: user.avatar }] : []
         user.sex = user.sex && user.sex !== 0 ? sexCols[user.sex] : null
         Object.assign(profileForm, user)

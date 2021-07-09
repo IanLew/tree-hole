@@ -40,7 +40,7 @@
               <van-loading type="spinner" size="20" />
             </template>
           </van-image>
-          <div class="multi">
+          <div v-else class="multi">
             <van-image
               v-for="(v, i) in letter.images"
               :key="i"
@@ -186,6 +186,10 @@ export default defineComponent({
           sender: userinfo.id,
           receiver: letter.value.sender
         }).then(() => {
+          replyContent.value = ''
+          replyState.pageNo = 1
+          replyState.list = []
+          getReplyList()
           loading.value = false
           Notify({
             type: 'success',

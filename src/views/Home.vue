@@ -43,7 +43,7 @@
                   <van-loading type="spinner" size="20" />
                 </template>
               </van-image>
-              <div class="multi">
+              <div v-else class="multi">
                 <van-image
                   v-for="(v, i) in item.images"
                   :key="i"
