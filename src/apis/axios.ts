@@ -98,7 +98,10 @@ function errorHandle(error: any) {
 				confirmButtonText: '立即登录'
 			}).then(() => {
 				router.push({
-					name: 'login'
+					name: 'login',
+					query: {
+						back: 1
+					}
 				})
 			}).catch(() => {})
 		}

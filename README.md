@@ -34,6 +34,7 @@ axios响应拦截：<br>
 ## 项目运行
 ```
 npm install
+node node_modules/esbuild/install
 ```
 
 ### 开发环境运行

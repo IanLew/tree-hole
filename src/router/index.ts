@@ -68,7 +68,10 @@ router.beforeEach((to, from, next) => {
       confirmButtonText: '立即登录'
     }).then(() => {
       next({
-        name: 'login'
+        name: 'login',
+        query: {
+          back: 1
+        }
       })
     }).catch(() => {
       next(false)

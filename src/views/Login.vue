@@ -46,7 +46,7 @@
 <script lang="ts">
 import { Notify } from 'vant'
 import { defineComponent, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { MD5 } from 'crypto-js'
 import { apiLogin } from '../apis'
@@ -54,6 +54,7 @@ import { apiLogin } from '../apis'
 export default defineComponent({
   name: 'login',
   setup() {
+    const route = useRoute()
     const router = useRouter()
     const store = useStore()
 
@@ -80,8 +81,13 @@ export default defineComponent({
           type: 'success',
           message: '登录成功'
         })
-
-        router.go(-1)
+        if (route.query.back) {
+          router.go(-1)
+        } else {
+          router.replace({
+            name: 'home'
+          })
+        }
       }).catch(() => {
         loading.value = false
       })
