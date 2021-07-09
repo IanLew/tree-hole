@@ -53,7 +53,9 @@ class BuserController {
     try {
       const res = await BuserModel.getUser(req)
       if (res) {
-        res.authority = res.authority.split('|')
+        if (res.authority) {
+          res.authority = res.authority.split('|')
+        }
         // 生成token
         const token = jsonwebtoken.sign({
           id: res.id,

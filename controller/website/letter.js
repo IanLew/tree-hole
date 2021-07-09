@@ -39,13 +39,12 @@ class LetterController {
           } else {
             ctx.body = {
               code: 412,
-              message: '创建失败',
+              message: '缺少用户',
               data: null
             }
           }
         }
       } catch(err) {
-        console.log(err)
         ctx.body = {
           code: 412,
           message: '创建失败',

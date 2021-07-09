@@ -8,12 +8,6 @@ module.exports = sequelize.define('buser', {
     allowNull: false,
     autoIncrement: true
   },
-  authority: {
-    type: DataTypes.STRING(1024),
-    allowNull: true,
-    field: 'authority',
-    comment: '权限'
-  },
   account: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -55,6 +49,12 @@ module.exports = sequelize.define('buser', {
     allowNull: true,
     field: 'manifesto',
     comment: '签名'
+  },
+  authority: {
+    type: DataTypes.STRING(1024),
+    allowNull: true,
+    field: 'authority',
+    comment: '权限'
   }
 }, {
   freezeTableName: true,
