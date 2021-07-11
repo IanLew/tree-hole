@@ -33,6 +33,14 @@ export default createStore({
     // token
     token(state) {
       return user.get(state).token
+    },
+    // 权限
+    authority(state) {
+      return user.get(state).authority || []
+    },
+    // 菜单
+    menus(state) {
+      return user.get(state).menus || []
     }
   },
   mutations: {

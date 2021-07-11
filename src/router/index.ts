@@ -6,7 +6,33 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: () => import('../views/Home.vue')
+    component: () => import('../views/Home.vue'),
+    redirect: () => {
+      if (store.getters.menus.length > 0) {
+        return {
+          name: store.getters.menus[0].name
+        }
+      }
+      return {
+        name: 'error',
+        query: {
+          code: 401,
+          message: '暂无任何权限'
+        }
+      }
+    },
+    children: [
+      {
+        path: '/system',
+        name: 'system',
+        component: () => import('../views/System.vue')
+      },
+      {
+        path: '/role',
+        name: 'role',
+        component: () => import('../views/Role.vue')
+      },
+    ]
   },
   {
     path: '/login',
@@ -16,6 +42,19 @@ const routes: Array<RouteRecordRaw> = [
       isAuth: true
     }
   },
+  {
+    path: '/error',
+    name: 'error',
+    component: () => import('../views/Error.vue'),
+    meta: {
+      isAuth: true
+    }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notFound',
+    component: () => import('../views/Error.vue')
+  }
 ]
 
 const router = createRouter({

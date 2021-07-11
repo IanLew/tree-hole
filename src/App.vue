@@ -1,6 +1,6 @@
 <template>
   <a-config-provider :locale="zhCN" :getPopupContainer="getPopupContainer">
-    <router-view />
+    <router-view :key="$route.fullPath" />
   </a-config-provider>
 </template>
 

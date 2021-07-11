@@ -9,17 +9,9 @@
         <img src="@/assets/img/logo.png" alt="">
       </div>
       <a-menu v-model:selectedKeys="selectedKeys" mode="inline" theme="dark">
-        <a-menu-item key="1">
-          <pie-chart-outlined />
-          <span>Option 1</span>
-        </a-menu-item>
-        <a-menu-item key="2">
-          <desktop-outlined />
-          <span>Option 2</span>
-        </a-menu-item>
-        <a-menu-item key="3">
-          <inbox-outlined />
-          <span>Option 3</span>
+        <a-menu-item v-for="item in menus" :key="item.id" @click="$router.push({ path: item.url })">
+          <component :is="item.icon"></component>
+          <span>{{ item.name }}</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
@@ -49,32 +41,6 @@
                   </template>
                 </a-avatar>
                 <span>{{ userinfo.nickname || userinfo.account }}</span>
-                <!-- <a-dropdown trigger="hover">
-                  <template #overlay>
-                    <a-menu model="inline" class="setting-menu">
-                      <a-menu-item>
-                        <user-outlined />
-                        <span>个人信息</span>
-                      </a-menu-item>
-                      <a-menu-item>
-                        <setting-outlined />
-                        <span>系统设置</span>
-                      </a-menu-item>
-                      <a-menu-item @click="logout">
-                        <export-outlined />
-                        <span>退出登录</span>
-                      </a-menu-item>
-                    </a-menu>
-                  </template>
-                  <div class="user">
-                    <a-avatar src="">
-                      <template #icon>
-                        <user-outlined />
-                      </template>
-                    </a-avatar>
-                    <span>{{ userinfo.nickname || userinfo.account }}</span>
-                  </div>
-                </a-dropdown> -->
               </a-col>
               <a-col @click="logout">
                 <export-outlined />
@@ -85,7 +51,7 @@
         </a-row>
       </a-layout-header>
       <a-layout-content>
-        <router-view />
+        <router-view :key="$route.fullPath" />
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -94,17 +60,28 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'home',
   setup() {
+    const route = useRoute()
     const router = useRouter()
     const store = useStore()
     const userinfo = store.getters.userinfo
+    const menus = store.getters.menus
 
     const isCollapsed = ref(false)  // 收缩侧边栏
-    const selectedKeys = ref([])  // 选中侧边栏菜单
+    // 选中侧边栏菜单
+    const selectedKeys = ref([])
+    if (menus.length > 0) {
+      const menu = menus.find((v: any) => v.url === route.path)
+      if (menu) {
+        selectedKeys.value = [menu.id]
+      } else {
+        selectedKeys.value = [menus[0].id]
+      }
+    }
 
     /**
      * 退出登录
@@ -122,6 +99,7 @@ export default defineComponent({
     return {
       isCollapsed,
       selectedKeys,
+      menus,
       userinfo,
       logout
     }
@@ -171,17 +149,6 @@ export default defineComponent({
   display: inline-block;
   vertical-align: middle;
 }
-// .user {
-//   &>span {
-//     display: inline-block;
-//     vertical-align: middle;
-//   }
-//   .ant-avatar+span {
-//     max-width: 80px;
-//     margin-left: 5px;
-//     .ellipsis();
-//   }
-// }
 :deep(.ant-layout-header) {
   .ant-row {
     .ant-row {
@@ -194,5 +161,8 @@ export default defineComponent({
       }
     }
   }
+}
+.ant-layout-content {
+  padding: 16px;
 }
 </style>
