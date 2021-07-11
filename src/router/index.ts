@@ -50,6 +50,19 @@ const routes: Array<RouteRecordRaw> = [
       needAuth: true
     }
   },
+  {
+    path: '/error',
+    name: 'error',
+    component: () => import('../views/Error.vue'),
+    meta: {
+      isAuth: true
+    }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notFound',
+    component: () => import('../views/Error.vue')
+  }
 ]
 
 const router = createRouter({
