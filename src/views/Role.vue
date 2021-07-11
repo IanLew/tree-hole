@@ -1,7 +1,7 @@
 <template>
   <a-form layout="inline">
     <a-form-item>
-      <a-button type="primary" :loading="loading">新增</a-button>
+      <a-button type="primary" :loading="loading" @click="$router.push({ name: 'roleDetail' })">新增</a-button>
     </a-form-item>
   </a-form>
   <a-table 
@@ -37,8 +37,8 @@
       <template #default="{ record }">{{ record.manifesto || '-' }}</template>
     </a-table-column>
     <a-table-column title="操作" data-index="operate" align="center">
-      <template #default>
-        <a-button type="link">编辑</a-button>
+      <template #default="{ record }">
+        <a-button type="link" @click="$router.push({ name: 'roleDetail', query: { id: record.id } })">编辑</a-button>
       </template>
     </a-table-column>
   </a-table>

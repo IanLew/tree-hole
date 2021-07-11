@@ -28,10 +28,45 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/System.vue')
       },
       {
+        path: '/system/detail',
+        name: 'systemDetail',
+        component: () => import('../views/system/Detail.vue')
+      },
+      {
         path: '/role',
         name: 'role',
         component: () => import('../views/Role.vue')
       },
+      {
+        path: '/role/detail',
+        name: 'roleDetail',
+        component: () => import('../views/role/Detail.vue')
+      },
+      {
+        path: '/user',
+        name: 'user',
+        component: () => import('../views/User.vue')
+      },
+      {
+        path: '/user/detail',
+        name: 'userDetail',
+        component: () => import('../views/user/Detail.vue')
+      },
+      {
+        path: '/letter',
+        name: 'letter',
+        component: () => import('../views/Letter.vue')
+      },
+      {
+        path: '/letter/detail',
+        name: 'letterDetail',
+        component: () => import('../views/letter/Detail.vue')
+      },
+      {
+        path: '/letter/logging',
+        name: 'letterLogging',
+        component: () => import('../views/letter/Logging.vue')
+      }
     ]
   },
   {

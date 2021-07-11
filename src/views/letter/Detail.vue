@@ -1,13 +1,12 @@
 <template>
+  <div>信笺管理-详情</div>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'HelloWorld',
-  props: {
-  },
+  name: 'letter-detail',
   setup() {
   }
 })
