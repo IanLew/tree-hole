@@ -1,5 +1,6 @@
 const jsonwebtoken = require('jsonwebtoken')
 const BuserModel = require('../../model/ms/user')
+const BresourceModel = require('../../model/ms/resource')
 
 /**
  * 用户控制器
@@ -21,7 +22,7 @@ class BuserController {
             data: null
           }
         } else {
-          await BuserModel.createCuser(req)
+          await BuserModel.createBuser(req)
           ctx.body = {
             code: 200,
             message: '创建成功',
@@ -53,8 +54,12 @@ class BuserController {
     try {
       const res = await BuserModel.getUser(req)
       if (res) {
+        let menus = []
         if (res.authority) {
-          res.authority = res.authority.split('|')
+          res.authority = res.authority.split('|').map(v => Number(v))
+          menus = await BresourceModel.getBresource({
+            category: 1
+          })
         }
         // 生成token
         const token = jsonwebtoken.sign({
@@ -69,6 +74,7 @@ class BuserController {
           message: '登录成功',
           data: {
             userinfo: res,
+            menus,
             token
           }
         }
@@ -80,6 +86,7 @@ class BuserController {
         }
       }
     } catch(err) {
+      console.log(err)
       ctx.body = {
         code: 412,
         message: '登录失败',
@@ -97,7 +104,9 @@ class BuserController {
     if (account) {
       try {
         const res = await BuserModel.getProfileByAccount(account)
-        res.authority = res.authority.split('|')
+        if (res.authority) {
+          res.authority = res.authority.split('|').map(v => Number(v))
+        }
         ctx.body = {
           code: 200,
           message: '查询成功',
@@ -131,7 +140,9 @@ class BuserController {
         delete req.account
         await BuserModel.updateProfile(account, req)
         const res = await BuserModel.getProfileByAccount(account)
-        res.authority = res.authority.split('|')
+        if (res.authority) {
+          res.authority = res.authority.split('|').map(v => Number(v))
+        }
         ctx.body = {
           code: 200,
           message: '信息更新成功',
@@ -162,7 +173,9 @@ class BuserController {
     if (account) {
       try {
         const res = await BuserModel.getAuthority(account)
-        res.authority = res.authority.split('|')
+        if (res.authority) {
+          res.authority = res.authority.split('|').map(v => Number(v))
+        }
         ctx.body = {
           code: 200,
           message: '查询成功',
@@ -231,12 +244,21 @@ class BuserController {
       ctx.body = {
         code: 200,
         message: '查询成功',
-        data: res.map(v => {
-          v.authority = v.authority.split('|')
-          return v
-        })
+        data: {
+          pageNo,
+          pageSize,
+          pages: Math.ceil(res.count / pageSize),
+          total: res.count,
+          list: res.rows.map(v => {
+            if (v.authority) {
+              v.authority = v.authority.split('|').map(v => Number(v))
+            }
+            return v
+          })
+        }
       }
     } catch(err) {
+      console.log(err)
       ctx.body = {
         code: 412,
         message: '查询失败',

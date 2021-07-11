@@ -225,7 +225,7 @@ class LetterController {
           pageSize,
           pages: Math.ceil(res.count / pageSize),
           total: res.count,
-          list: res
+          list: res.rows
         }
       }
     } catch(err) {

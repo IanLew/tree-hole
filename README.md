@@ -12,6 +12,10 @@ mysql v8.0.25.0
 - schema：数据表结构
 - sequelize：数据库sequelize配置
 - routes：路由
+- utils：工具
+  - supervisor：添加管理员账号
+    - acc参数（必选）：管理员账号
+    - pwd参数（可选）：管理员密码，此参数缺少密码默认为账号
 
 ## 接口
 接口前缀`/api`<br>
@@ -98,6 +102,8 @@ npm install
 npm start
 # or nodemon
 npm run dev
+# insert account
+node ./utils/supervisor --acc admin --pwd admin
 ```
 
 ### 线上环境运行

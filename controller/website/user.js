@@ -205,7 +205,13 @@ class CuserController {
       ctx.body = {
         code: 200,
         message: '查询成功',
-        data: res
+        data: {
+          pageNo,
+          pageSize,
+          pages: Math.ceil(res.count / pageSize),
+          total: res.count,
+          list: res.rows
+        }
       }
     } catch(err) {
       ctx.body = {

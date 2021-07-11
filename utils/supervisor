@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+const argv = require('yargs').argv
+const { MD5 } = require('crypto-js')
+const BuserModel = require('../model/ms/user')
+const BresourceModel = require('../model/ms/resource')
+
+async function createAccount() {
+  try {
+    const res = await BuserModel.getProfileByAccount(argv.acc)
+  
+    if (res) {
+      console.log('supervisor already axist.')
+    } else {
+      await BuserModel.createBuser({
+        account: argv.acc,
+        password: MD5(argv.pwd || argv.acc).toString(),
+        authority: '1|2'
+      })
+      await BresourceModel.createBresource([{
+        name: '系统管理',
+        url: '/system',
+        icon: 'ClusterOutlined',
+        category: 1
+      }, {
+        name: '角色管理',
+        url: '/role',
+        icon: 'ContactsOutlined',
+        category: 1
+      }])
+      console.log('supervisor created successfully.')
+    }
+  } catch(e) {
+    console.error('table is being created, please try again.')
+  }
+}
+
+if (argv.acc) {
+  createAccount()
+} else {
+  console.error('arguments --acc is required.')
+}

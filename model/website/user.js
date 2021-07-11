@@ -49,23 +49,6 @@ class CuserModel {
       }
     })
   }
-
-  /**
-   * 查询所有用户
-   */
-  static async getUsers({ limit, offset, fields }) {
-    return await cuser.findAndCountAll({
-      attributes: {
-        exclude: ['password']
-      },
-      where: {
-        account: fields.account,
-        nickname: data.nickname
-      },
-      limit,
-      offset
-    })
-  }
   
   /**
    * 随机获取除指定用户id之外的用户id
@@ -109,6 +92,27 @@ class CuserModel {
       where: {
         account
       }
+    })
+  }
+
+  /**
+   * 查询所有用户
+   */
+  static async getUsers({ limit, offset, fields }) {
+    const params = {}
+    if (fields.account) {
+      params.account = fields.account
+    }
+    if (fields.nickname) {
+      params.nickname = fields.nickname
+    }
+    return await cuser.findAndCountAll({
+      attributes: {
+        exclude: ['password']
+      },
+      where: params,
+      limit,
+      offset
     })
   }
 }

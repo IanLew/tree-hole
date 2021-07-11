@@ -27,16 +27,23 @@ class BresourceModel {
    * 获取资源数据
    */
   static async getBresource(data) {
-    if (data) {
+    if (data.id) {
       return await bresource.findOne({
         where: {
-          id: data.id,
-          category: data.category,
-          floor: data.floor
+          id: data.id
         }
       })
     } else {
-      return await bresource.findAll()
+      const params = {}
+      if (data.category) {
+        params.category = data.category
+      }
+      if (data.floor) {
+        params.floor = data.floor
+      }
+      return await bresource.findAll({
+        where: params
+      })
     }
   }
 

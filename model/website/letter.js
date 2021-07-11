@@ -162,6 +162,13 @@ class LetterModel {
    * 条件字段：receiver | sender
    */
   static async getAllLetters({ limit, offset, fields }) {
+    const params = {}
+    if (fields.receiver) {
+      params.receiver = fields.receiver
+    }
+    if (fields.sender) {
+      params.receiver = fields.sender
+    }
     return await letter.findAndCountAll({
       attributes: {
         include: [
@@ -174,10 +181,7 @@ class LetterModel {
         model: cuser,
         attributes: ['avatar', 'nickname', 'account', 'manifesto']
       },
-      where: {
-        receiver: fields.receiver,
-        sender: fields.sender
-      },
+      where: params,
       limit,
       offset
     })

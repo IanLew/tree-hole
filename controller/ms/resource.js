@@ -65,11 +65,11 @@ class BresourceController {
   static async getBresource(ctx) {
     let req = ctx.request.query
     try {
-      await BresourceModel.getBresource(req) 
+      const res = await BresourceModel.getBresource(req) 
       ctx.body = {
         code: 200,
         message: '查询成功',
-        data: null
+        data: res
       }
     } catch(err) {
       ctx.body = {

@@ -48,16 +48,22 @@ class LetterlogModel {
    * 条件字段：letterId | receiver | sender
    */
   static async getAllLetterlogs({ limit, offset, fields }) {
+    const params = {}
+    if (fields.letterId) {
+      params.letterId = fields.letterId
+    }
+    if (fields.receiver) {
+      params.receiver = fields.receiver
+    }
+    if (fields.sender) {
+      params.sender = fields.sender
+    }
     return await letterlog.findAndCountAll({
       include: {
         model: cuser,
         attributes: ['avatar', 'nickname', 'account', 'manifesto']
       },
-      where: {
-        letterId: fields.letterId,
-        receiver: fields.receiver,
-        sender: fields.sender
-      },
+      where: params,
       limit,
       offset
     })

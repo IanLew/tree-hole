@@ -92,14 +92,18 @@ class BuserModel {
    * 查询所有用户
    */
   static async getUsers({ limit, offset, fields }) {
+    const params = {}
+    if (fields.account) {
+      params.account = fields.account
+    }
+    if (fields.data) {
+      params.nickname = fields.nickname
+    }
     return await buser.findAndCountAll({
       attributes: {
         exclude: ['password']
       },
-      where: {
-        account: fields.account,
-        nickname: data.nickname
-      },
+      where: params,
       limit,
       offset
     })
