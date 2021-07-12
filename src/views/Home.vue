@@ -71,9 +71,9 @@ export default defineComponent({
     const userinfo = store.getters.userinfo
     const menus = store.getters.menus
 
-    const isCollapsed = ref(false)  // 收缩侧边栏
+    const isCollapsed = ref<boolean>(false)  // 收缩侧边栏
     // 选中侧边栏菜单
-    const selectedKeys = ref([])
+    const selectedKeys = ref<number[]>([])
     if (menus.length > 0) {
       const menu = menus.find((v: any) => v.url === route.path)
       if (menu) {

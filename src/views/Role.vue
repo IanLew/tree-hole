@@ -9,7 +9,7 @@
     :dataSource="dataSource" 
     :pagination="pagination"
     :loading="loading"
-    style="marginTop: 16px"
+    style="margin-top: 16px"
     @change="onTableChange">
     <a-table-column title="#" data-index="id" align="center" />
     <a-table-column title="头像" data-index="avatar" align="center">
@@ -23,6 +23,12 @@
     </a-table-column>
     <a-table-column title="账号" data-index="account" align="center">
       <template #default="{ record }">{{ record.account || '-' }}</template>
+    </a-table-column>
+    <a-table-column title="权限" data-index="sex" align="center">
+      <template #default="{ record }">
+        <a-tag v-if="record.authority.includes(1) && record.authority.includes(2)" color="#87d068" style="margin-right: 0">超级管理员</a-tag>
+        <a-tag v-else color="#2db7f5" style="margin-right: 0">普通管理员</a-tag>
+      </template>
     </a-table-column>
     <a-table-column title="昵称" data-index="nickname" align="center">
       <template #default="{ record }">{{ record.nickname || '-' }}</template>
@@ -77,7 +83,7 @@ export default defineComponent({
     /**
      * 表格变化
      */
-    function onTableChange(page) {
+    function onTableChange(page: any) {
       pagination.pageNo = page.pageNo
       pagination.pageSize = page.pageSize
       getList()
