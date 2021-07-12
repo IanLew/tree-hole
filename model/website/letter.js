@@ -73,7 +73,8 @@ class LetterModel {
         attributes: ['avatar', 'nickname', 'account', 'manifesto']
       },
       where: {
-        replyId
+        replyId,
+        category: 1
       },
       limit,
       offset
@@ -103,7 +104,8 @@ class LetterModel {
         },
         where: {
           sender: user,
-          replyId: null
+          replyId: null,
+          category: 1
         },
         limit,
         offset
@@ -123,7 +125,8 @@ class LetterModel {
         },
         where: {
           receiver: user,
-          replyId: null
+          replyId: null,
+          category: 1
         },
         limit,
         offset
@@ -163,6 +166,7 @@ class LetterModel {
    */
   static async getAllLetters({ limit, offset, fields }) {
     const params = {}
+    fields.category = 1
     if (fields.receiver) {
       params.receiver = fields.receiver
     }
