@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
     redirect: () => {
       if (store.getters.menus.length > 0) {
         return {
-          name: store.getters.menus[0].name
+          path: store.getters.menus[0].url
         }
       }
       return {
@@ -25,47 +25,74 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/system',
         name: 'system',
-        component: () => import('../views/System.vue')
+        component: () => import('../views/System.vue'),
+        meta: {
+          title: '系统设置'
+        }
       },
       {
         path: '/system/detail',
         name: 'systemDetail',
-        component: () => import('../views/system/Detail.vue')
+        component: () => import('../views/system/Detail.vue'),
+        meta: {
+          title: '系统详情'
+        }
       },
       {
         path: '/role',
         name: 'role',
-        component: () => import('../views/Role.vue')
+        component: () => import('../views/Role.vue'),
+        meta: {
+          title: '角色管理'
+        }
       },
       {
         path: '/role/detail',
         name: 'roleDetail',
-        component: () => import('../views/role/Detail.vue')
+        component: () => import('../views/role/Detail.vue'),
+        meta: {
+          title: '角色详情'
+        }
       },
       {
         path: '/user',
         name: 'user',
-        component: () => import('../views/User.vue')
+        component: () => import('../views/User.vue'),
+        meta: {
+          title: '用户管理'
+        }
       },
       {
         path: '/user/detail',
         name: 'userDetail',
-        component: () => import('../views/user/Detail.vue')
+        component: () => import('../views/user/Detail.vue'),
+        meta: {
+          title: '用户详情'
+        }
       },
       {
         path: '/letter',
         name: 'letter',
-        component: () => import('../views/Letter.vue')
+        component: () => import('../views/Letter.vue'),
+        meta: {
+          title: '信笺管理'
+        }
       },
       {
         path: '/letter/detail',
         name: 'letterDetail',
-        component: () => import('../views/letter/Detail.vue')
+        component: () => import('../views/letter/Detail.vue'),
+        meta: {
+          title: '信笺详情'
+        }
       },
       {
         path: '/letter/logging',
         name: 'letterLogging',
-        component: () => import('../views/letter/Logging.vue')
+        component: () => import('../views/letter/Logging.vue'),
+        meta: {
+          title: '信笺数据'
+        }
       }
     ]
   },

@@ -3,7 +3,7 @@
     <div class="login-box">
       <h1>后台管理系统</h1>
       <a-form>
-        <a-form-item>
+        <a-form-item v-bind="validateInfos.account">
           <a-input
             v-model:value="loginForm.account" 
             auto-complete="off"
@@ -15,7 +15,7 @@
             </template>
           </a-input>
         </a-form-item>
-        <a-form-item style="margin-bottom: 10px;">
+        <a-form-item v-bind="validateInfos.password">
           <a-input
             v-model:value="loginForm.password"
             type="password"
@@ -27,10 +27,10 @@
             </template>
           </a-input>
         </a-form-item>
-        <a-form-item>
+        <a-form-item class="record">
           <a-checkbox v-model:checked="isRecordPwd" disabled>记住密码</a-checkbox>
         </a-form-item>
-        <a-form-item class="btns">
+        <a-form-item>
           <a-button
             type="primary"
             size="large"
@@ -71,7 +71,7 @@ export default defineComponent({
       account: [{ required: true, message: '请输入账号' }],
       password: [{ required: true, message: '请输入密码' }]
     })
-    const { validate } = Form.useForm(loginForm, rulesRef)
+    const { validate, validateInfos } = Form.useForm(loginForm, rulesRef)
 
     /**
      * 登录
@@ -103,6 +103,7 @@ export default defineComponent({
       loading,
       isRecordPwd,
       loginForm,
+      validateInfos,
       login
     }
   }
@@ -143,8 +144,8 @@ export default defineComponent({
     color: @color-primary;
     font-size: 30px;
     text-align: center;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-top: 35px;
+    margin-bottom: 35px;
   }
   .ant-form-horizontal {
     padding-left: 24px;
@@ -153,6 +154,12 @@ export default defineComponent({
   .anticon {
     color: rgba(0, 0, 0, .3);
     font-size: 16px;
+  }
+}
+.record {
+  margin-bottom: 30px;
+  :deep(.ant-form-item-control-input) {
+    min-height: 1px;
   }
 }
 </style>

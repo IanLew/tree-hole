@@ -18,7 +18,7 @@
     <template #category="{ record }">
       <a-tag v-if="record.category === 0" color="#87d068" style="margin-right: 0">按钮</a-tag>
       <a-tag v-else-if="record.category === 1" color="#2db7f5" style="margin-right: 0">菜单</a-tag>
-      <a-tag v-else color="#f50" style="margin-right: 0">其它</a-tag>
+      <a-tag v-else color="#f50" style="margin-right: 0">其他</a-tag>
     </template>
     <template #url="{ record }">{{ record.url || '-' }}</template>
     <template #operate="{ record }">
@@ -71,5 +71,5 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 </style>

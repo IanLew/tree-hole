@@ -6,6 +6,8 @@ export const apiUploadImage = (args: any, config?: AxiosRequestConfig) => $axios
 export const apiLogin = (args: any, config?: AxiosRequestConfig) => $axios.post('/buser/login', args, config)  // 登录
 
 export const apiGetBresource = (config?: AxiosRequestConfig) => $axios.get('/token/bresource', config)  // 获取资源数据
+export const apiCreateBresource = (args: any, config?: AxiosRequestConfig) => $axios.post('/token/bresource/create', args, config)  // 新增资源数据
+export const apiUpdateBresource = (args: any, config?: AxiosRequestConfig) => $axios.post('/token/bresource/update', args, config)  // 修改资源数据
 export const apiGetBusers = (args: any, config?: AxiosRequestConfig) => $axios.post('/token/busers', args, config)  // 获取后台用户列表
 
 export const apiGetCusers = (args: any, config?: AxiosRequestConfig) => $axios.post('/token/cusers', args, config)  // 获取官网用户列表

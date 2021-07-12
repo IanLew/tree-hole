@@ -25,9 +25,11 @@
                 <menu-fold-outlined v-else class="collapsed-trigger" @click="() => (isCollapsed = !isCollapsed)" />
               </a-col>
               <a-col>
-                <a-breadcrumb>
-                  <a-breadcrumb-item>Home</a-breadcrumb-item>
-                  <a-breadcrumb-item>Option 1</a-breadcrumb-item>
+                <a-breadcrumb :routes="breadcrumbs">
+                  <template #itemRender="{ route, routes }">
+                    <span v-if="routes.indexOf(route) === routes.length - 1">{{ route.name }}</span>
+                    <router-link v-else :to="route.path">{{ route.name }}</router-link>
+                  </template>
                 </a-breadcrumb>
               </a-col>
             </a-row>
@@ -68,18 +70,39 @@ export default defineComponent({
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
-    const userinfo = store.getters.userinfo
-    const menus = store.getters.menus
 
+    const userinfo = store.getters.userinfo  // 用户信息
+    const menus = store.getters.menus  // 有权限的菜单
+    const routeOpts = router.options.routes[0].children  // 路由数据
+    const breadcrumbs = ref([])  // 面包屑
     const isCollapsed = ref<boolean>(false)  // 收缩侧边栏
     // 选中侧边栏菜单
     const selectedKeys = ref<number[]>([])
     if (menus.length > 0) {
-      const menu = menus.find((v: any) => v.url === route.path)
-      if (menu) {
-        selectedKeys.value = [menu.id]
-      } else {
-        selectedKeys.value = [menus[0].id]
+      let path = ''
+      const pathNames = route.path.replace(/^\//, '').split('/')
+      for(const [k, v] of pathNames.entries()) {
+        path = `${path}/${v}`
+        if (k === 0) {
+          const menu = menus.find((m: any) => m.url === path)
+          if (menu) {
+            selectedKeys.value = [menu.id]
+            breadcrumbs.value.push({
+              path,
+              name: menu.name
+            })
+          } else {
+            break
+          }
+        } else {
+          const menu = routeOpts.find((m: any) => m.path === path)
+          if (menu) {
+            breadcrumbs.value.push({
+              path,
+              name: menu.meta.title
+            })
+          }
+        }
       }
     }
 
@@ -99,6 +122,7 @@ export default defineComponent({
     return {
       isCollapsed,
       selectedKeys,
+      breadcrumbs,
       menus,
       userinfo,
       logout
@@ -153,7 +177,7 @@ export default defineComponent({
   .ant-row {
     .ant-row {
       .ant-col {
-        span {
+        & > span {
           & + span {
             margin-left: 5px;
           }

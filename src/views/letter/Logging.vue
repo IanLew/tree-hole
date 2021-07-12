@@ -6,8 +6,9 @@
     :loading="loading"
     @change="onTableChange">
     <a-table-column title="#" data-index="id" align="center" />
+    <a-table-column title="信笺ID" data-index="letterId" align="center" />
     <a-table-column title="动作" data-index="action" align="center">
-      <template #category="{ record }">
+      <template #default="{ record }">
         <a-tag v-if="record.action === 0" color="#f50" style="margin-right: 0">否定</a-tag>
         <a-tag v-else-if="record.action === 1" color="#87d068" style="margin-right: 0">赞同</a-tag>
         <a-tag v-else color="#2db7f5" style="margin-right: 0">分享</a-tag>
@@ -80,5 +81,5 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 </style>
