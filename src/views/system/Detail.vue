@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { Form } from 'ant-design-vue'
-import { ref, reactive, defineComponent } from 'vue'
+import { ref, reactive, toRaw, defineComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { apiGetBresource, apiCreateBresource, apiUpdateBresource } from '../../apis'
@@ -67,9 +67,9 @@ export default defineComponent({
     const { validate, validateInfos } = Form.useForm(formState, rulesRef)
 
     /**
-     * 获取用户信息
+     * 获取资源信息
      */
-    function getUserProfile() {
+    function getResource() {
       loading.value = true
       apiGetBresource({
         params: {
@@ -90,7 +90,7 @@ export default defineComponent({
       validate().then(() => {
         loading.value = true
         if (route.query.id) {
-          apiUpdateBresource(formState).then(() => {
+          apiUpdateBresource(toRaw(formState)).then(() => {
             loading.value = false
             message.success('创建成功')
             router.go(-1)
@@ -98,7 +98,7 @@ export default defineComponent({
             loading.value = false
           })
         } else {
-          apiCreateBresource(formState).then(() => {
+          apiCreateBresource(toRaw(formState)).then(() => {
             loading.value = false
             message.success('修改成功')
             router.go(-1)
@@ -109,7 +109,9 @@ export default defineComponent({
       }).catch(() => {})
     }
 
-    getUserProfile()
+    if (route.query.id) {
+      getResource()
+    }
 
     return {
       loading,

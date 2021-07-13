@@ -7,6 +7,12 @@
     @change="onTableChange">
     <a-table-column title="#" data-index="id" align="center" />
     <a-table-column title="发送者" data-index="cuser" align="center" />
+    <a-table-column title="类型" data-index="category" align="center">
+      <template #category="{ record }">
+        <a-tag v-if="record.category === 0" color="#87d068" style="margin-right: 0">树洞</a-tag>
+        <a-tag v-else color="#2db7f5" style="margin-right: 0">其他</a-tag>
+      </template>
+    </a-table-column>
     <a-table-column title="内容" data-index="content" align="center" />
     <a-table-column title="分享数" data-index="shareTotal" align="center" />
     <a-table-column title="赞同数" data-index="mannerTotal" align="center" />

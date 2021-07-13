@@ -37,7 +37,7 @@
           <a-col>
             <a-row type="flex" justify="center">
               <a-col>
-                <a-avatar src="">
+                <a-avatar :src="userinfo.avatar">
                   <template #icon>
                     <user-outlined />
                   </template>

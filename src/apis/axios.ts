@@ -103,7 +103,10 @@ function errorHandle(error: any) {
 				centered: true,
         onOk() {
           router.push({
-            name: 'login'
+            name: 'login',
+						query: {
+							back: 1
+						}
           })
         },
         onCancel() {}
